@@ -1,12 +1,19 @@
 package org.fireballs.alfaballs.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Table(name = "boards", uniqueConstraints = @UniqueConstraint(columnNames = {"project_id", "name"}))
 public class Board {
     @Id
@@ -21,5 +28,5 @@ public class Board {
     private Project project;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Issue> issues;
+    private List<Issue> issues = new ArrayList<>();;
 }

@@ -1,13 +1,19 @@
 package org.fireballs.alfaballs.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Table(name = "issues")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Issue {
@@ -39,17 +45,14 @@ public class Issue {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> observers = new HashSet<>();
 
-    @OneToMany(mappedBy = "issue")
-    private Set<IssueFieldValue> fieldValues;
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<IssueFieldValue> fieldValues = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "issue_dependencies",
             joinColumns = @JoinColumn(name = "issue_id"),
             inverseJoinColumns = @JoinColumn(name = "depends_on_issue_id"))
-    private Set<Issue> dependsOn;
-
-    @ManyToMany(mappedBy = "dependsOn")
-    private Set<Issue> dependencies;
+    private Set<Issue> dependencies = new HashSet<>();
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "epic_id", nullable = false)
