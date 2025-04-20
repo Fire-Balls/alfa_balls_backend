@@ -21,6 +21,9 @@ public class Project {
     @Column(length = 100, nullable = false)
     private String name;
 
+    @Column(length = 10, nullable = false)
+    private String code;
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();
 }
