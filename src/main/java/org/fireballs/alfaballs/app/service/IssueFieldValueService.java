@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-//todo не работает, переделать
-
 @Service
 @Slf4j
 @RequiredArgsConstructor

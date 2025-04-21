@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "issue_field_values")
-@IdClass(IssueFieldValueId.class)
 public class IssueFieldValue {
     @Id
+    private IssueFieldValueId issueFieldValue;
+
     @ManyToOne
     @JoinColumn(name = "issue_id", nullable = false)
     private Issue issue;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "field_id", nullable = false)
     private FieldDefinition field;
