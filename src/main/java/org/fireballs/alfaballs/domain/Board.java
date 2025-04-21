@@ -28,5 +28,5 @@ public class Board {
     private Project project;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Issue> issues = new ArrayList<>();;
+    private List<Issue> issues = new ArrayList<>();
 }

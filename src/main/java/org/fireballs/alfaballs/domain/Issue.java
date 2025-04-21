@@ -57,4 +57,8 @@ public class Issue {
     @ManyToOne(optional = false)
     @JoinColumn(name = "epic_id", nullable = false)
     private Epic epic;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User assignee;
 }
