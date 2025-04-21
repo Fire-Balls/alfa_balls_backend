@@ -1,21 +1,31 @@
 package org.fireballs.alfaballs.extern.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
-public record ProfileDto(
-        @NotNull String id,
+@Data
+@Builder
+@EqualsAndHashCode(callSuper = true)
+public class ProfileDto extends RepresentationModel<ProfileDto> {
+
+        @NotNull
+        private String id;
 
         @NotNull
         @Size(min = 1, max = 255)
-        String fullName,
+        private String fullName;
 
         @NotNull
         @Email
-        String email,
+        private String email;
 
         @NotNull
-        String avatar
-) {}
+        private String avatar;
+}
+
 

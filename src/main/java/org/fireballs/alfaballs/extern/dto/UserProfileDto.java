@@ -1,25 +1,38 @@
 package org.fireballs.alfaballs.extern.dto;
 
-import jakarta.validation.constraints.*;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 import java.util.List;
 
-public record UserProfileDto(
-        @NotNull Integer id,
+@Data
+@Builder
+@EqualsAndHashCode(callSuper = true)
+public class UserProfileDto extends RepresentationModel<UserProfileDto> {
+
+        @NotNull
+        private Integer id;
 
         @NotNull
         @Size(min = 1, max = 255)
-        String fullName,
+        private String fullName;
 
         @NotNull
         @Email
-        String email,
+        private String email;
 
         @NotNull
-        String avatar,
+        private String avatar;
 
         @NotNull
         @NotEmpty
-        List<@NotBlank @Size(max = 100) String> roles
-) {}
+        private List<@NotBlank @Size(max = 100) String> roles;
+}
+
 

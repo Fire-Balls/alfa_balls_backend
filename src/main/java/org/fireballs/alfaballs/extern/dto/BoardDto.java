@@ -1,19 +1,28 @@
 package org.fireballs.alfaballs.extern.dto;
 
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import java.util.List;
 
-public record BoardDto(
-        @NotNull
-        @Valid
-        ProjectShortcutDto project,
-
-        @NotNull
-        List<@NotNull @Valid IssueShortcutDto> issues,
+@Data
+@Builder
+@EqualsAndHashCode(callSuper = true)
+public class BoardDto extends RepresentationModel<BoardDto> {
 
         @NotNull
         @Valid
-        BoardShortcutDto shortcut
-) {
+        private ProjectShortcutDto project;
+
+        @NotNull
+        private List<@NotNull @Valid IssueShortcutDto> issues;
+
+        @NotNull
+        @Valid
+        private BoardShortcutDto shortcut;
 }
+
+

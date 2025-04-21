@@ -3,25 +3,35 @@ package org.fireballs.alfaballs.extern.dto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 
-public record EpicDto(
-        @NotNull String id,
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Builder
+public class EpicDto extends RepresentationModel<EpicDto> {
+
+        @NotNull
+        private Long id;
 
         @NotNull
         @Size(min = 1, max = 255)
-        String title,
+        private String title;
 
         @NotNull
-        List<@Valid FieldDto> fields,
+        private List<@Valid FieldDto> fields;
 
         @NotNull
-        List<@Valid IssueShortcutDto> depends,
+        private List<@Valid IssueShortcutDto> depends;
 
         @NotNull
-        List<@Valid ObserverDto> observers,
+        private List<@Valid ObserverDto> observers;
 
         @NotNull
-        List<@Valid IssueShortcutDto> tasks
-) {}
+        private List<@Valid IssueShortcutDto> tasks;
+}
+

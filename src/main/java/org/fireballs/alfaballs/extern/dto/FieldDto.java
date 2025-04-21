@@ -2,19 +2,28 @@ package org.fireballs.alfaballs.extern.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
-public record FieldDto(
+@Data
+@Builder
+@EqualsAndHashCode(callSuper = true)
+public class FieldDto extends RepresentationModel<FieldDto> {
+
         @NotNull
         @Size(min = 1, max = 100)
-        String fieldName,
+        private String fieldName;
 
         @NotNull
         @Size(min = 1, max = 1000)
-        String fieldValue,
+        private String fieldValue;
 
         @NotNull
-        Boolean required,
+        private Boolean required;
 
-        String type // допустим nullable
-) {}
+        private String type; // допустим nullable
+}
+
 

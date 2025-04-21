@@ -19,7 +19,7 @@ public class ProjectController {
     private final ProjectShortcutAssembler projectShortcutAssembler;
 
     @GetMapping
-    public ResponseEntity<List<ProjectShortcutDto>> getAllBoardGames() {
+    public ResponseEntity<List<ProjectShortcutDto>> getAllProjects() {
         List<ProjectShortcutDto> projects = projectService.getAllProjects().stream()
                 .map(projectShortcutAssembler::toModel)
                 .toList();

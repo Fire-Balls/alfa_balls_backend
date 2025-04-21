@@ -3,14 +3,27 @@ package org.fireballs.alfaballs.extern.dto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
-public record BoardShortcutDto(
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class BoardShortcutDto extends RepresentationModel<BoardShortcutDto> {
+
         @NotNull
         @Valid
-        ProjectShortcutDto project,
+        private ProjectShortcutDto project;
+
         @NotNull
         @PositiveOrZero(message = "Issues count cannot be negative")
-        Integer issuesCount,
-        @NotNull Integer boardId,
-        @NotNull String boardName
-) {}
+        private Integer issuesCount;
+
+        @NotNull
+        private Integer boardId;
+
+        @NotNull
+        private String boardName;
+}

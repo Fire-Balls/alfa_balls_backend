@@ -3,17 +3,26 @@ package org.fireballs.alfaballs.extern.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
-public record EpicShortcutDto(
+@Data
+@Builder
+@EqualsAndHashCode(callSuper = true)
+public class EpicShortcutDto extends RepresentationModel<EpicShortcutDto> {
+
         @NotNull
         @Positive
-        Long projectId,
+        private Long projectId;
 
         @NotBlank
-        String epicName,
+        private String epicName;
 
         @NotNull
         @Positive
-        Long epicId
-) {}
+        private Long epicId;
+}
+
 
