@@ -3,6 +3,7 @@ package org.fireballs.alfaballs.app.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.repository.ProjectRepository;
+import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.domain.Project;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,10 @@ public class ProjectService {
             throw new IllegalArgumentException("Project is null");
         }
 
-        projectRepository.save(project);
+        Project savedProject = projectRepository.save(project);
         log.info("Project {} was created", project.getId());
 
-        return project;
+        return savedProject;
     }
 
     public Project getProjectById(long projectId) {
