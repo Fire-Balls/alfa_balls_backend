@@ -26,6 +26,10 @@ public class User {
     @Column(length = 100)
     private String name;
 
+    @Lob
+    @Column(name = "avatar")
+    private byte[] avatar;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;

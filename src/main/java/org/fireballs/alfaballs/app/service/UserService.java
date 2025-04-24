@@ -12,33 +12,33 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository UserRepository;
+    private final UserRepository userRepository;
 
     public User saveUser(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User is null");
         }
 
-        UserRepository.save(user);
+        userRepository.save(user);
         log.info("User {} was created", user.getId());
 
         return user;
     }
 
     public User getUserById(long userId) {
-        var searchedGame = UserRepository.findById(userId)
+        var searchedGame = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
         log.info("User {} was found", userId);
         return searchedGame;
     }
 
     public void deleteUser(long userId) {
-        UserRepository.deleteById(userId);
+        userRepository.deleteById(userId);
         log.info("User {} was deleted", userId);
     }
 
     public List<User> getAllUsers() {
         log.info("Get all Users");
-        return UserRepository.findAll();
+        return userRepository.findAll();
     }
 }

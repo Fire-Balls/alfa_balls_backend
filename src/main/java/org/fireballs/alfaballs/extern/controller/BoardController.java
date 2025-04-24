@@ -36,4 +36,6 @@ public class BoardController {
 
         return new ResponseEntity<>(boardAssembler.toModel(retrievedBoard), HttpStatus.OK);
     }
+
+
 }

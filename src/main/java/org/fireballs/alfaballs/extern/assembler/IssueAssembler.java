@@ -12,6 +12,7 @@ public class IssueAssembler extends RepresentationModelAssemblerSupport<Issue, I
         super(IssueController.class, IssueDto.class);
     }
 
+    //todo observers and dependencies
     @Override
     public IssueDto toModel(Issue entity) {
         IssueDto issueDto = instantiateModel(entity);

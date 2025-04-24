@@ -44,4 +44,17 @@ public class ProjectController {
         Project retrievedProject = projectService.getProjectById(projectId);
         return new ResponseEntity<>(projectAssembler.toModel(retrievedProject), HttpStatus.OK);
     }
+
+    @PutMapping("/{projectId}")
+    public ResponseEntity<ProjectDto> updateProjectById(@PathVariable Long projectId,
+                                                        @Validated(PostPutGroup.class) @RequestBody ProjectDto projectDto) {
+    }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<ProjectDto> deleteProjectById(@PathVariable Long projectId) {
+    }
+
+    @GetMapping("/{projectId}/full")
+    public ResponseEntity<ProjectDto> getProjectDetailsById(@PathVariable Long projectId) {
+    }
 }
