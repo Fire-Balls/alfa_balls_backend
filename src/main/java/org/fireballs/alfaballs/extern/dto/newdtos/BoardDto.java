@@ -8,38 +8,56 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.fireballs.alfaballs.extern.dto.group.DetailsView;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
-import org.fireballs.alfaballs.extern.dto.group.ShortcutView;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class BoardDto extends RepresentationModel<BoardDto> {
-    @JsonView({DetailsView.class, ShortcutView.class})
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @NotNull
-    private Long boardId;
+public interface BoardDto {
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    class Shortcut extends RepresentationModel<Shortcut> {
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private Long boardId;
 
-    @JsonView({DetailsView.class, ShortcutView.class})
-    @NotNull(groups = PostPutGroup.class)
-    private String boardName;
+        @NotNull(groups = PostPutGroup.class)
+        private String boardName;
 
-    @JsonView({DetailsView.class, ShortcutView.class})
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @NotNull
-    private Long projectId;
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private @Valid ProjectDto.Shortcut project;
 
-    @JsonView(ShortcutView.class)
-    @NotNull
-    @PositiveOrZero()
-    private Integer issuesCount;
+        @JsonView
+        @NotNull
+        @PositiveOrZero
+        private Integer issuesCount;
+    }
 
-    @JsonView(DetailsView.class)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @NotNull(groups = DetailsView.class)
-    private List<@NotNull @Valid IssueDto> issues;
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    class Details extends RepresentationModel<Details> {
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private Long boardId;
+
+        @NotNull(groups = PostPutGroup.class)
+        private String boardName;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private @Valid ProjectDto.Shortcut project;
+
+        @NotNull
+        @PositiveOrZero()
+        private Integer issuesCount;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private List<@NotNull @Valid IssueDto> issues;
+
+        //private List<@NotNull @Valid StatusDto> statuses;
+    }
 }

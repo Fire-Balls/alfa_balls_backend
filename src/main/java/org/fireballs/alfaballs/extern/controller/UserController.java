@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.UserService;
 import org.fireballs.alfaballs.domain.User;
-import org.fireballs.alfaballs.extern.assembler.UserAssembler;
-import org.fireballs.alfaballs.extern.dto.group.DetailsView;
+import org.fireballs.alfaballs.extern.assembler.UserDetailsAssembler;
+import org.fireballs.alfaballs.extern.assembler.UserShortcutAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
 import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
 import org.fireballs.alfaballs.extern.dto.newdtos.UserDto;
@@ -20,33 +20,31 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserAssembler userAssembler;
+    private final UserDetailsAssembler userDetailsAssembler;
+    private final UserShortcutAssembler userShortcutAssembler;
 
-    @JsonView(DetailsView.class)
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Validated(PostPutGroup.class) @RequestBody UserDto userDto) {
-        User savedUser = userService.saveUser(userAssembler.toEntity(userDto));
-        return new ResponseEntity<>(userAssembler.toModel(savedUser), HttpStatus.CREATED);
+    public ResponseEntity<UserDto.Details> createUser(@Validated(PostPutGroup.class) @RequestBody UserDto.Shortcut userDto) {
+        User savedUser = userService.saveUser(userShortcutAssembler.toEntity(userDto));
+        return new ResponseEntity<>(userDetailsAssembler.toModel(savedUser), HttpStatus.CREATED);
     }
 
-    @JsonView(DetailsView.class)
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
+    public ResponseEntity<UserDto.Details> getUser(@PathVariable Long userId) {
         User retrievedUser = userService.getUserById(userId);
-        return new ResponseEntity<>(userAssembler.toModel(retrievedUser), HttpStatus.OK);
+        return new ResponseEntity<>(userDetailsAssembler.toModel(retrievedUser), HttpStatus.OK);
     }
 
-    @JsonView(DetailsView.class)
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId,
-                                              @Validated(PostPutGroup.class) @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto.Details> updateUser(@PathVariable Long userId,
+                                              @Validated(PostPutGroup.class) @RequestBody UserDto.Shortcut userDto) {
         User existingUser = userService.getUserById(userId);
         existingUser.setName(userDto.getFullName());
         existingUser.setEmail(userDto.getEmail());
         existingUser.setAvatar(userDto.getAvatar().getBytes());
 
         User updatedUser = userService.saveUser(existingUser);
-        return new ResponseEntity<>(userAssembler.toModel(updatedUser), HttpStatus.OK);
+        return new ResponseEntity<>(userDetailsAssembler.toModel(updatedUser), HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")

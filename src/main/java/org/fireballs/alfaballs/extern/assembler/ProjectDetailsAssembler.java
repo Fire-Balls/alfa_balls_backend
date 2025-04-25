@@ -3,7 +3,6 @@ package org.fireballs.alfaballs.extern.assembler;
 import org.fireballs.alfaballs.app.service.IssueService;
 import org.fireballs.alfaballs.domain.Project;
 import org.fireballs.alfaballs.extern.controller.ProjectController;
-import org.fireballs.alfaballs.extern.dto.newdtos.BoardDto;
 import org.fireballs.alfaballs.extern.dto.newdtos.ProjectDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -13,54 +12,55 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Component
-public class ProjectAssembler extends RepresentationModelAssemblerSupport<Project, ProjectDto> {
+public class ProjectDetailsAssembler extends RepresentationModelAssemblerSupport<Project, ProjectDto.Details> {
     private final IssueAssembler issueAssembler;
-    private final BoardAssembler boardAssembler;
+    private final BoardShortcutAssembler boardShortcutAssembler;
     private final IssueService issueService;
-    private final UserAssembler userAssembler;
+    private final UserShortcutAssembler userShortcutAssembler;
 
-    public ProjectAssembler(IssueAssembler issueAssembler, BoardAssembler boardAssembler,
-                            IssueService issueService, UserAssembler userAssembler) {
-        super(ProjectController.class, ProjectDto.class);
+    public ProjectDetailsAssembler(IssueAssembler issueAssembler,
+                                   BoardShortcutAssembler boardAssembler,
+                                   IssueService issueService,
+                                   UserShortcutAssembler userShortcutAssembler) {
+        super(ProjectController.class, ProjectDto.Details.class);
         this.issueAssembler = issueAssembler;
-        this.boardAssembler = boardAssembler;
+        this.boardShortcutAssembler = boardAssembler;
         this.issueService = issueService;
-        this.userAssembler = userAssembler;
+        this.userShortcutAssembler = userShortcutAssembler;
     }
 
     @Override
-    public ProjectDto toModel(Project entity) {
-        ProjectDto dto = instantiateModel(entity);
+    public ProjectDto.Details toModel(Project entity) {
+        ProjectDto.Details dto = instantiateModel(entity);
 
         dto.setProjectId(entity.getId());
         dto.setProjectName(entity.getName());
         dto.setProjectCode(entity.getCode());
 
         dto.setKanbanBoards(entity.getBoards().stream()
-                .map(boardAssembler::toModel)
+                .map(boardShortcutAssembler::toModel)
                 .toList());
 
-        // todo херня надо переделать, так как даже в шорткате происходит джоин
         dto.setIssues(issueService.getAllIssuesByProjectId(entity.getId()).stream()
                 .map(issueAssembler::toModel)
                 .toList());
 
         dto.setParticipants(entity.getUsers().stream()
-                .map(userAssembler::toModel)
+                .map(userShortcutAssembler::toModel)
                 .collect(Collectors.toSet()));
 
         return dto;
     }
 
-    public Project toEntity(ProjectDto projectDto) {
+    public Project toEntity(ProjectDto.Details projectDto) {
         return Project.builder()
                 .id(projectDto.getProjectId())
                 .name(projectDto.getProjectName())
                 .code(projectDto.getProjectCode())
                 .boards(projectDto.getKanbanBoards() == null ? new ArrayList<>() :
-                        projectDto.getKanbanBoards().stream().map(boardAssembler::toEntity).toList())
+                        projectDto.getKanbanBoards().stream().map(boardShortcutAssembler::toEntity).toList())
                 .users(projectDto.getParticipants() == null ? new HashSet<>() :
-                        projectDto.getParticipants().stream().map(userAssembler::toEntity).collect(Collectors.toSet()))
+                        projectDto.getParticipants().stream().map(userShortcutAssembler::toEntity).collect(Collectors.toSet()))
                 .build();
     }
 }

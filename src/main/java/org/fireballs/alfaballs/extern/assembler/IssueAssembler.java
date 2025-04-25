@@ -28,4 +28,9 @@ public class IssueAssembler extends RepresentationModelAssemblerSupport<Issue, I
 
         return issueDto;
     }
+
+    //todo peredelat
+    public Issue toEntity(IssueDto issueDto) {
+        return new Issue();
+    }
 }

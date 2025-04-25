@@ -19,10 +19,10 @@ public class UserService {
             throw new IllegalArgumentException("User is null");
         }
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
         log.info("User {} was created", user.getId());
 
-        return user;
+        return savedUser;
     }
 
     public User getUserById(long userId) {

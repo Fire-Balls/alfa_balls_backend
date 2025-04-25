@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.BoardService;
 import org.fireballs.alfaballs.domain.Board;
-import org.fireballs.alfaballs.extern.assembler.BoardAssembler;
-import org.fireballs.alfaballs.extern.dto.group.DetailsView;
+import org.fireballs.alfaballs.extern.assembler.BoardDetailsAssembler;
+import org.fireballs.alfaballs.extern.assembler.BoardShortcutAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
 import org.fireballs.alfaballs.extern.dto.newdtos.BoardDto;
 import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
@@ -20,37 +20,35 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
-    private final BoardAssembler boardAssembler;
+    private final BoardDetailsAssembler boardDetailsAssembler;
+    private final BoardShortcutAssembler boardShortcutAssembler;
 
-    @JsonView(DetailsView.class)
     @PostMapping
-    public ResponseEntity<BoardDto> createBoard(@PathVariable("projectId") Long projectId,
-                                                @Validated(PostPutGroup.class) @RequestBody BoardDto boardDto) {
+    public ResponseEntity<BoardDto.Details> createBoard(@PathVariable("projectId") Long projectId,
+                                                @Validated(PostPutGroup.class) @RequestBody BoardDto.Shortcut boardDto) {
 
         Board savedBoard = boardService.saveNewBoard((projectId), boardDto.getBoardName());
-        return new ResponseEntity<>(boardAssembler.toModel(savedBoard), HttpStatus.CREATED);
+        return new ResponseEntity<>(boardDetailsAssembler.toModel(savedBoard), HttpStatus.CREATED);
     }
 
-    @JsonView(DetailsView.class)
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardDto> getBoard(@PathVariable("projectId") Long projectId,
+    public ResponseEntity<BoardDto.Details> getBoard(@PathVariable("projectId") Long projectId,
                                              @PathVariable("boardId") Long boardId) {
 
         Board retrievedBoard = boardService.getBoardById((boardId));
 
-        return new ResponseEntity<>(boardAssembler.toModel(retrievedBoard), HttpStatus.OK);
+        return new ResponseEntity<>(boardDetailsAssembler.toModel(retrievedBoard), HttpStatus.OK);
     }
 
-    @JsonView(DetailsView.class)
     @PutMapping("/{boardId}")
-    public ResponseEntity<BoardDto> updateBoard(@PathVariable("projectId") Long projectId,
+    public ResponseEntity<BoardDto.Details> updateBoard(@PathVariable("projectId") Long projectId,
                                                 @PathVariable("boardId") Long boardId,
-                                                @Validated(PostPutGroup.class) @RequestBody BoardDto boardDto) {
+                                                @Validated(PostPutGroup.class) @RequestBody BoardDto.Shortcut boardDto) {
         Board existingBoard = boardService.getBoardById((boardId));
         existingBoard.setName(boardDto.getBoardName());
 
         Board updatedBoard = boardService.updateBoard(existingBoard);
-        return new ResponseEntity<>(boardAssembler.toModel(updatedBoard), HttpStatus.OK);
+        return new ResponseEntity<>(boardDetailsAssembler.toModel(updatedBoard), HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")

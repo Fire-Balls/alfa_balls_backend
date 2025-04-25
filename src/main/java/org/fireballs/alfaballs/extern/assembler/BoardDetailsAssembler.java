@@ -1,32 +1,30 @@
 package org.fireballs.alfaballs.extern.assembler;
 
-import org.fireballs.alfaballs.app.service.ProjectService;
 import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.extern.controller.ProjectController;
 import org.fireballs.alfaballs.extern.dto.newdtos.BoardDto;
-import org.fireballs.alfaballs.extern.dto.newdtos.IssueDto;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BoardAssembler extends RepresentationModelAssemblerSupport<Board, BoardDto> {
+public class BoardDetailsAssembler extends RepresentationModelAssemblerSupport<Board, BoardDto.Details> {
     private final IssueAssembler issueAssembler;
-    private final ProjectService projectService;
+    private final ProjectShortcutAssembler projectShortcutAssembler;
 
-    public BoardAssembler(@Lazy ProjectAssembler projectAssembler, IssueAssembler issueAssembler, ProjectService projectService) {
-        super(ProjectController.class, BoardDto.class);
+    public BoardDetailsAssembler(IssueAssembler issueAssembler,
+                                 ProjectShortcutAssembler projectShortcutAssembler) {
+        super(ProjectController.class, BoardDto.Details.class);
         this.issueAssembler = issueAssembler;
-        this.projectService = projectService;
+        this.projectShortcutAssembler = projectShortcutAssembler;
     }
 
     @Override
-    public BoardDto toModel(Board entity) {
-        BoardDto dto = instantiateModel(entity);
+    public BoardDto.Details toModel(Board entity) {
+        BoardDto.Details dto = instantiateModel(entity);
 
         dto.setBoardId(entity.getId());
         dto.setBoardName(entity.getName());
-        dto.setProjectId(entity.getProject().getId());
+        dto.setProject(projectShortcutAssembler.toModel(entity.getProject()));
         dto.setIssuesCount(entity.getIssues().size());
         dto.setIssues(entity.getIssues().stream()
                 .map(issueAssembler::toModel)
@@ -35,12 +33,13 @@ public class BoardAssembler extends RepresentationModelAssemblerSupport<Board, B
         return dto;
     }
 
-    public Board toEntity(BoardDto boardDto) {
+    public Board toEntity(BoardDto.Details boardDto) {
         return Board.builder()
+                .id(boardDto.getBoardId())
                 .name(boardDto.getBoardName())
-                .project(boardDto.getProjectId() == null ? null : projectService.getProjectById(boardDto.getProjectId()))
+                .project(boardDto.getProject() == null ? null : projectShortcutAssembler.toEntity(boardDto.getProject()))
                 .issues(boardDto.getIssues() == null ? null : boardDto.getIssues().stream()
-                        .map(IssueDto::toEntity)
+                        .map(issueAssembler::toEntity)
                         .toList())
                 .build();
     }
