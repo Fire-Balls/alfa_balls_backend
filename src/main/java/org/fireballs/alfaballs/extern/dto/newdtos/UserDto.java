@@ -1,44 +1,49 @@
 package org.fireballs.alfaballs.extern.dto.newdtos;
 
-import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.fireballs.alfaballs.domain.User;
-import org.fireballs.alfaballs.extern.dto.group.*;
+import org.fireballs.alfaballs.extern.dto.group.DetailsView;
+import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
+import org.fireballs.alfaballs.extern.dto.group.ShortcutView;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.util.Base64;
-import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto extends RepresentationModel<UserDto> {
-    @NotNull(groups = {DetailsGroup.class, ShortcutGroup.class})
+    @JsonView({DetailsView.class})
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @NotNull
     private Long id;
 
-    @NotNull(groups = {PostPutGroup.class, DetailsGroup.class, ShortcutGroup.class})
+    @JsonView({DetailsView.class, ShortcutView.class})
+    @NotNull(groups = PostPutGroup.class)
     @Size(min = 1, max = 255)
     private String fullName;
 
-    @NotNull(groups = {PostPutGroup.class, DetailsGroup.class, ShortcutGroup.class})
+    @JsonView({DetailsView.class, ShortcutView.class})
+    @NotNull(groups = PostPutGroup.class)
     @Email
     private String email;
 
-    @NotNull(groups = {PostPutGroup.class, DetailsGroup.class, ShortcutGroup.class})
+    @JsonView({DetailsView.class, ShortcutView.class})
+    @NotNull(groups = PostPutGroup.class)
     private String avatar;
 
-    @NotNull(groups = {PostPutGroup.class, DetailsGroup.class})
-    @NotEmpty
-    private List<@NotBlank @Size(max = 100) String> roles;
-
-    //todo одна роль или несколько, надо решить
-    public User toEntity() {
-        return User.builder()
-                .id(id)
-                .name(fullName)
-                .email(email)
-                .avatar(Base64.getDecoder().decode(avatar))
-                //.role()
-                .build();
-    }
+    @JsonView(DetailsView.class)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Set<Long> projects;
 }
+
+//    @NotNull(groups = {PostPutGroup.class, DetailsView.class})
+//    @NotEmpty
+//    private List<@NotBlank @Size(max = 100) String> roles;}

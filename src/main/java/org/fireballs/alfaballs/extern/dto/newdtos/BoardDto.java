@@ -1,46 +1,45 @@
 package org.fireballs.alfaballs.extern.dto.newdtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.fireballs.alfaballs.domain.Board;
-import org.fireballs.alfaballs.domain.Project;
-import org.fireballs.alfaballs.extern.dto.group.DetailsGroup;
+import org.fireballs.alfaballs.extern.dto.group.DetailsView;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
-import org.fireballs.alfaballs.extern.dto.group.ShortcutGroup;
+import org.fireballs.alfaballs.extern.dto.group.ShortcutView;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BoardDto extends RepresentationModel<BoardDto> {
-    @NotNull(groups = {ShortcutGroup.class, DetailsGroup.class})
-    @Valid
-    private ProjectDto project;
-
-    @NotNull(groups = {ShortcutGroup.class, DetailsGroup.class})
-    @PositiveOrZero(message = "Issues count cannot be negative")
-    private Integer issuesCount;
-
-    @NotNull(groups = {ShortcutGroup.class, DetailsGroup.class})
+    @JsonView({DetailsView.class, ShortcutView.class})
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @NotNull
     private Long boardId;
 
-    @NotNull(groups = {ShortcutGroup.class, PostPutGroup.class, DetailsGroup.class})
+    @JsonView({DetailsView.class, ShortcutView.class})
+    @NotNull(groups = PostPutGroup.class)
     private String boardName;
 
-    @NotNull(groups = DetailsGroup.class)
-    private List<@NotNull @Valid IssueDto> issues;
+    @JsonView({DetailsView.class, ShortcutView.class})
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @NotNull
+    private Long projectId;
 
-    public Board toEntity() {
-        return Board.builder()
-                .name(boardName)
-                .project(project == null ? null : project.toEntity())
-                .issues(issues == null ? null : issues.stream()
-                        .map(IssueDto::toEntity)
-                        .toList())
-                .build();
-    }
+    @JsonView(ShortcutView.class)
+    @NotNull
+    @PositiveOrZero()
+    private Integer issuesCount;
+
+    @JsonView(DetailsView.class)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @NotNull(groups = DetailsView.class)
+    private List<@NotNull @Valid IssueDto> issues;
 }

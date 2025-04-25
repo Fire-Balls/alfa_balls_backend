@@ -1,10 +1,7 @@
 package org.fireballs.alfaballs.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +20,8 @@ public class Board {
     @Column(length = 100, nullable = false, unique = true)
     private String name;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;

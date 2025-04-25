@@ -1,10 +1,10 @@
 package org.fireballs.alfaballs.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -20,8 +20,8 @@ public class User {
     @Column(length = 254, nullable = false)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
+//    @Column(name = "password_hash", nullable = false)
+//    private String passwordHash;
 
     @Column(length = 100)
     private String name;
@@ -30,7 +30,17 @@ public class User {
     @Column(name = "avatar")
     private byte[] avatar;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "role_id", nullable = false)
+//    private Role role;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany
+    @JoinTable(
+            name = "user_project",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
+    private Set<Project> projects = new HashSet<>();
 }

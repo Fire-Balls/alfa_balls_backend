@@ -1,4 +1,4 @@
 package org.fireballs.alfaballs.extern.dto.group;
 
-public interface DetailsGroup {
+public interface DetailsView {
 }

@@ -1,13 +1,12 @@
 package org.fireballs.alfaballs.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -26,6 +25,13 @@ public class Project {
     @Column(length = 10, nullable = false)
     private String code;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Board> boards = new ArrayList<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "projects")
+    private Set<User> users = new HashSet<>();
 }

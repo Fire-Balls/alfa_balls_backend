@@ -16,13 +16,23 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final ProjectService projectService;
 
-
-    public Board saveBoard(long projectId, String boardName) {
+    public Board saveNewBoard(long projectId, String boardName) {
         Project project = projectService.getProjectById(projectId);
 
         Board board = new Board();
         board.setName(boardName);
-        board.setProject(project); // важная часть!
+        board.setProject(project);
+
+        Board savedBoard = boardRepository.save(board);
+        log.info("New Board {} was created", board.getId());
+
+        return savedBoard;
+    }
+
+    public Board updateBoard(Board board) {
+        if (board == null || board.getId() == null) {
+            throw new IllegalArgumentException("Project is null");
+        }
 
         Board savedBoard = boardRepository.save(board);
         log.info("Board {} was created", board.getId());
