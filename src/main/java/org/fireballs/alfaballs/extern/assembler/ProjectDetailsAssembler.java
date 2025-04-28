@@ -17,16 +17,18 @@ public class ProjectDetailsAssembler extends RepresentationModelAssemblerSupport
     private final BoardShortcutAssembler boardShortcutAssembler;
     private final IssueService issueService;
     private final UserShortcutAssembler userShortcutAssembler;
+    private final TypeAssembler typeAssembler;
 
     public ProjectDetailsAssembler(IssueAssembler issueAssembler,
                                    BoardShortcutAssembler boardAssembler,
                                    IssueService issueService,
-                                   UserShortcutAssembler userShortcutAssembler) {
+                                   UserShortcutAssembler userShortcutAssembler, TypeAssembler typeAssembler) {
         super(ProjectController.class, ProjectDto.Details.class);
         this.issueAssembler = issueAssembler;
         this.boardShortcutAssembler = boardAssembler;
         this.issueService = issueService;
         this.userShortcutAssembler = userShortcutAssembler;
+        this.typeAssembler = typeAssembler;
     }
 
     @Override
@@ -49,6 +51,10 @@ public class ProjectDetailsAssembler extends RepresentationModelAssemblerSupport
                 .map(userShortcutAssembler::toModel)
                 .collect(Collectors.toSet()));
 
+        dto.setTypes(entity.getTypes().stream()
+                .map(typeAssembler::toModel)
+                .collect(Collectors.toSet()));
+
         return dto;
     }
 
@@ -61,6 +67,8 @@ public class ProjectDetailsAssembler extends RepresentationModelAssemblerSupport
                         projectDto.getKanbanBoards().stream().map(boardShortcutAssembler::toEntity).toList())
                 .users(projectDto.getParticipants() == null ? new HashSet<>() :
                         projectDto.getParticipants().stream().map(userShortcutAssembler::toEntity).collect(Collectors.toSet()))
+                .types(projectDto.getTypes() == null ? new HashSet<>() :
+                        projectDto.getTypes().stream().map(typeAssembler::toEntity).collect(Collectors.toSet()))
                 .build();
     }
 }

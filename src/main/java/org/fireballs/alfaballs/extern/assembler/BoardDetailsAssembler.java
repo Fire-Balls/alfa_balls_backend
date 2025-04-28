@@ -6,16 +6,22 @@ import org.fireballs.alfaballs.extern.dto.newdtos.BoardDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.stream.Collectors;
+
 @Component
 public class BoardDetailsAssembler extends RepresentationModelAssemblerSupport<Board, BoardDto.Details> {
     private final IssueAssembler issueAssembler;
     private final ProjectShortcutAssembler projectShortcutAssembler;
+    private final StatusAssembler statusAssembler;
 
     public BoardDetailsAssembler(IssueAssembler issueAssembler,
-                                 ProjectShortcutAssembler projectShortcutAssembler) {
+                                 ProjectShortcutAssembler projectShortcutAssembler, StatusAssembler statusAssembler) {
         super(ProjectController.class, BoardDto.Details.class);
         this.issueAssembler = issueAssembler;
         this.projectShortcutAssembler = projectShortcutAssembler;
+        this.statusAssembler = statusAssembler;
     }
 
     @Override
@@ -29,6 +35,9 @@ public class BoardDetailsAssembler extends RepresentationModelAssemblerSupport<B
         dto.setIssues(entity.getIssues().stream()
                 .map(issueAssembler::toModel)
                 .toList());
+        dto.setStatuses(entity.getStatuses().stream()
+                .map(statusAssembler::toModel)
+                .collect(Collectors.toSet()));
 
         return dto;
     }
@@ -38,9 +47,12 @@ public class BoardDetailsAssembler extends RepresentationModelAssemblerSupport<B
                 .id(boardDto.getBoardId())
                 .name(boardDto.getBoardName())
                 .project(boardDto.getProject() == null ? null : projectShortcutAssembler.toEntity(boardDto.getProject()))
-                .issues(boardDto.getIssues() == null ? null : boardDto.getIssues().stream()
+                .issues(boardDto.getIssues() == null ? new ArrayList<>() : boardDto.getIssues().stream()
                         .map(issueAssembler::toEntity)
                         .toList())
+                .statuses(boardDto.getStatuses() == null ? new HashSet<>() : boardDto.getStatuses().stream()
+                        .map(statusAssembler::toEntity)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 }

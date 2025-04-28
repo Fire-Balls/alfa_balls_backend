@@ -34,4 +34,12 @@ public class Project {
     @ToString.Exclude
     @ManyToMany(mappedBy = "projects")
     private Set<User> users = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Type> types = new HashSet<>();
+
+//    @Column(nullable = false)
+//    private Integer lastIssueNumber = 0;
 }

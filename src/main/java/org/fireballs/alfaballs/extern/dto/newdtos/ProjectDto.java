@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -62,5 +63,9 @@ public interface ProjectDto {
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @NotNull
         private Set<UserDto.@Valid Shortcut> participants;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private @Valid Set<TypeDto> types;
     }
 }

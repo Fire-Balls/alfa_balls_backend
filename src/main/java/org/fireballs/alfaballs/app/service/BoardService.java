@@ -1,5 +1,6 @@
 package org.fireballs.alfaballs.app.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.repository.BoardRepository;
@@ -7,35 +8,41 @@ import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.domain.Project;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
+@Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
     private final ProjectService projectService;
 
-    public Board saveNewBoard(long projectId, String boardName) {
+    public Board saveNewBoard(long projectId, Board board) {
         Project project = projectService.getProjectById(projectId);
 
-        Board board = new Board();
-        board.setName(boardName);
-        board.setProject(project);
+        Board newBoard = Board.builder()
+                .name(board.getName())
+                .project(project)
+                .issues(new ArrayList<>())
+                .statuses(new HashSet<>())
+                .build();
 
-        Board savedBoard = boardRepository.save(board);
-        log.info("New Board {} was created", board.getId());
+        Board savedBoard = boardRepository.save(newBoard);
+        log.info("New board {} was created in project {}", board.getId(), project.getId());
 
         return savedBoard;
     }
 
-    public Board updateBoard(Board board) {
-        if (board == null || board.getId() == null) {
-            throw new IllegalArgumentException("Project is null");
+    public Board saveExistingBoard(Board board) {
+        if (board == null || board.getProject() == null) {
+            throw new IllegalArgumentException("Board or Project is null");
         }
 
         Board savedBoard = boardRepository.save(board);
-        log.info("Board {} was created", board.getId());
+        log.info("Board {} was saved", board.getId());
 
         return savedBoard;
     }

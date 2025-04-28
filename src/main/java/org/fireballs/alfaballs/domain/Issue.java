@@ -6,7 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -33,7 +36,7 @@ public class Issue {
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
-    private IssueType type;
+    private Type type;
 
     @ManyToOne
     @JoinColumn(name = "board_id", nullable = false)
@@ -61,4 +64,34 @@ public class Issue {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User assignee;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Priority priority;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime deadline;
+
+    @Column(unique = true, nullable = false)
+    private String code;
+
+    @ElementCollection
+    @CollectionTable(name = "issue_tags", joinColumns = @JoinColumn(name = "issue_id"))
+    @Column(name = "tag")
+    private List<String> tags = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<File> files = new ArrayList<>();
+
+    public enum Priority {
+        HIGH,
+        LOW
+    }
 }

@@ -1,6 +1,5 @@
 package org.fireballs.alfaballs.extern.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.BoardService;
 import org.fireballs.alfaballs.domain.Board;
@@ -27,7 +26,7 @@ public class BoardController {
     public ResponseEntity<BoardDto.Details> createBoard(@PathVariable("projectId") Long projectId,
                                                 @Validated(PostPutGroup.class) @RequestBody BoardDto.Shortcut boardDto) {
 
-        Board savedBoard = boardService.saveNewBoard((projectId), boardDto.getBoardName());
+        Board savedBoard = boardService.saveNewBoard(projectId, boardShortcutAssembler.toEntity(boardDto));
         return new ResponseEntity<>(boardDetailsAssembler.toModel(savedBoard), HttpStatus.CREATED);
     }
 
@@ -47,7 +46,7 @@ public class BoardController {
         Board existingBoard = boardService.getBoardById((boardId));
         existingBoard.setName(boardDto.getBoardName());
 
-        Board updatedBoard = boardService.updateBoard(existingBoard);
+        Board updatedBoard = boardService.saveExistingBoard(existingBoard);
         return new ResponseEntity<>(boardDetailsAssembler.toModel(updatedBoard), HttpStatus.OK);
     }
 

@@ -12,6 +12,7 @@ import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
+import java.util.Set;
 
 public interface BoardDto {
     @EqualsAndHashCode(callSuper = true)
@@ -58,6 +59,8 @@ public interface BoardDto {
         @NotNull
         private List<@NotNull @Valid IssueDto> issues;
 
-        //private List<@NotNull @Valid StatusDto> statuses;
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private @Valid Set<StatusDto> statuses;
     }
 }

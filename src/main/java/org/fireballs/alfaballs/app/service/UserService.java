@@ -1,5 +1,6 @@
 package org.fireballs.alfaballs.app.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.repository.UserRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
@@ -20,7 +22,7 @@ public class UserService {
         }
 
         User savedUser = userRepository.save(user);
-        log.info("User {} was created", user.getId());
+        log.info("User {} was saved", user.getId());
 
         return savedUser;
     }
