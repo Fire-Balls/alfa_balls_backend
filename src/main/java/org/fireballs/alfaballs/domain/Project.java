@@ -25,21 +25,29 @@ public class Project {
     @Column(length = 10, nullable = false)
     private String code;
 
+    @Builder.Default
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Board> boards = new ArrayList<>();
 
+    @Builder.Default
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToMany(mappedBy = "projects")
     private Set<User> users = new HashSet<>();
 
+    @Builder.Default
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Type> types = new HashSet<>();
 
-//    @Column(nullable = false)
-//    private Integer lastIssueNumber = 0;
+    @Builder.Default
+    @Column(nullable = false)
+    private Integer lastIssueNumber = 0;
+
+    public int incrementAndGetLastIssueNumber() {
+        return ++lastIssueNumber;
+    }
 }

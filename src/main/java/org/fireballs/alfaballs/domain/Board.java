@@ -28,9 +28,11 @@ public class Board {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Issue> issues = new ArrayList<>();
 
+    @Builder.Default
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)

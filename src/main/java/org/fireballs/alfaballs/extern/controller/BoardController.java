@@ -43,10 +43,11 @@ public class BoardController {
     public ResponseEntity<BoardDto.Details> updateBoard(@PathVariable("projectId") Long projectId,
                                                 @PathVariable("boardId") Long boardId,
                                                 @Validated(PostPutGroup.class) @RequestBody BoardDto.Shortcut boardDto) {
+        //todo переделать
         Board existingBoard = boardService.getBoardById((boardId));
-        existingBoard.setName(boardDto.getBoardName());
+        existingBoard.setName(boardDto.getBoardName()); //todo хрень
 
-        Board updatedBoard = boardService.saveExistingBoard(existingBoard);
+        Board updatedBoard = boardService.updateBoard(existingBoard);
         return new ResponseEntity<>(boardDetailsAssembler.toModel(updatedBoard), HttpStatus.OK);
     }
 

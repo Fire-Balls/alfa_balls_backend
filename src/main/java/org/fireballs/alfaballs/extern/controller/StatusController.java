@@ -42,10 +42,7 @@ public class StatusController {
                                                 @PathVariable("boardId") Long boardId,
                                                 @PathVariable("statusId") Long statusId,
                                                 @Validated(PostPutGroup.class) @RequestBody StatusDto statusDto) {
-        Status existingStatus = statusService.getStatusById((statusId));
-        existingStatus.setName(statusDto.getName());
-
-        Status updatedStatus = statusService.saveExistingStatus(existingStatus);
+        Status updatedStatus = statusService.updateStatus(statusId, statusAssembler.toEntity(statusDto));
         return new ResponseEntity<>(statusAssembler.toModel(updatedStatus), HttpStatus.OK);
     }
 

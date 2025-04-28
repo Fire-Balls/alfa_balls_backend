@@ -42,15 +42,18 @@ public class Issue {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(name = "issue_observers",
             joinColumns = @JoinColumn(name = "issue_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> observers = new HashSet<>();
 
-    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<IssueFieldValue> fieldValues = new HashSet<>();
+//    @Builder.Default
+//    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<IssueFieldValue> fieldValues = new HashSet<>();
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(name = "issue_dependencies",
             joinColumns = @JoinColumn(name = "issue_id"),
@@ -73,8 +76,9 @@ public class Issue {
     @Column(nullable = false)
     private Priority priority;
 
+    @Builder.Default
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column
     private LocalDateTime deadline;
@@ -82,6 +86,7 @@ public class Issue {
     @Column(unique = true, nullable = false)
     private String code;
 
+    @Builder.Default
     @ElementCollection
     @CollectionTable(name = "issue_tags", joinColumns = @JoinColumn(name = "issue_id"))
     @Column(name = "tag")

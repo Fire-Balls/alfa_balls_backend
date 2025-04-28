@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.repository.StatusRepository;
 import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.domain.Status;
+import org.fireballs.alfaballs.domain.Type;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,26 +18,24 @@ public class StatusService {
     public Status saveNewStatus(long boardId, Status status) {
         Board board = boardService.getBoardById(boardId);
 
-        Status newStatus = Status.builder()
-                .name(status.getName())
-                .board(board)
-                .build();
+        status.setBoard(board);
 
-        Status savedStatus = statusRepository.save(newStatus);
-        log.info("New type {} was created in project {}", savedStatus.getId(), board.getId());
+        Status savedStatus = statusRepository.save(status);
+        log.info("New status {} was created in board {}", savedStatus.getId(), board.getId());
 
         return savedStatus;
     }
 
-    public Status saveExistingStatus(Status status) {
-        if (status == null || status.getBoard() == null) {
+    public Status updateStatus(long existingStatusId, Status newStatus) {
+        if (newStatus == null || newStatus.getBoard() == null) {
             throw new IllegalArgumentException("Status or Board is null");
         }
 
-        statusRepository.save(status);
-        log.info("Status {} was saved", status.getId());
+        Status existingStatus = getStatusById(existingStatusId);
 
-        return status;
+        existingStatus.setName(newStatus.getName());
+
+        return saveNewStatus(existingStatus.getBoard().getId(), existingStatus);
     }
 
     public Status getStatusById(long statusId) {

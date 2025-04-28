@@ -17,37 +17,35 @@ public class TypeService {
     public Type saveNewType(long projectId, Type type) {
         Project project = projectService.getProjectById(projectId);
 
-        Type newType = Type.builder()
-                .name(type.getName())
-                .project(project)
-                .build();
+        type.setProject(project);
 
-        Type savedType = typeRepository.save(newType);
+        Type savedType = typeRepository.save(type);
         log.info("New type {} was created in project {}", savedType.getId(), project.getId());
 
         return savedType;
     }
 
-    public Type saveExistingType(Type type) {
-        if (type == null || type.getProject() == null) {
+    public Type updateType(long existingTypeId, Type newType) {
+        if (newType == null || newType.getProject() == null) {
             throw new IllegalArgumentException("Type or Project is null");
         }
 
-        typeRepository.save(type);
-        log.info("IssueType {} was saved", type.getId());
+        Type existingType = getTypeById(existingTypeId);
 
-        return type;
+        existingType.setName(newType.getName());
+
+        return saveNewType(existingType.getProject().getId(), existingType);
     }
 
-    public Type getTypeById(long issueTypeId) {
-        var searchedGame = typeRepository.findById(issueTypeId)
-                .orElseThrow(() -> new IllegalArgumentException("IssueType with id " + issueTypeId + " not found"));
-        log.info("IssueType {} was found", issueTypeId);
+    public Type getTypeById(long typeId) {
+        var searchedGame = typeRepository.findById(typeId)
+                .orElseThrow(() -> new IllegalArgumentException("Type with id " + typeId + " not found"));
+        log.info("Type {} was found", typeId);
         return searchedGame;
     }
 
-    public void deleteType(long issueTypeId) {
-        typeRepository.deleteById(issueTypeId);
-        log.info("IssueType {} was deleted", issueTypeId);
+    public void deleteType(long typeId) {
+        typeRepository.deleteById(typeId);
+        log.info("Type {} was deleted", typeId);
     }
 }

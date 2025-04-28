@@ -47,11 +47,7 @@ public class ProjectController {
     @PutMapping("/{projectId}")
     public ResponseEntity<ProjectDto.Shortcut> updateProjectById(@PathVariable Long projectId,
                                                         @Validated(PostPutGroup.class) @RequestBody ProjectDto.Shortcut projectDto) {
-        Project existingProject = projectService.getProjectById(projectId);
-        existingProject.setName(projectDto.getProjectName());
-        existingProject.setCode(projectDto.getProjectCode());
-
-        Project updatedProject = projectService.saveProject(existingProject);
+        Project updatedProject = projectService.updateProject(projectId, projectShortcutAssembler.toEntity(projectDto));
         return new ResponseEntity<>(projectShortcutAssembler.toModel(updatedProject), HttpStatus.OK);
     }
 

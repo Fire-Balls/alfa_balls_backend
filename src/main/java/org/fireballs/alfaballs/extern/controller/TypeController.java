@@ -2,7 +2,6 @@ package org.fireballs.alfaballs.extern.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.TypeService;
-import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.extern.assembler.TypeAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
@@ -40,10 +39,7 @@ public class TypeController {
     public ResponseEntity<TypeDto> updateType(@PathVariable("projectId") Long projectId,
                                               @PathVariable("typeId") Long typeId,
                                               @Validated(PostPutGroup.class) @RequestBody TypeDto typeDto) {
-        Type existingType = typeService.getTypeById((typeId));
-        existingType.setName(typeDto.getName());
-
-        Type updatedType = typeService.saveExistingType(existingType);
+        Type updatedType = typeService.updateType(typeId, typeAssembler.toEntity(typeDto));
         return new ResponseEntity<>(typeAssembler.toModel(updatedType), HttpStatus.OK);
     }
 

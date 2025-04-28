@@ -3,7 +3,9 @@ package org.fireballs.alfaballs.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -34,6 +36,7 @@ public class User {
 //    @JoinColumn(name = "role_id", nullable = false)
 //    private Role role;
 
+    @Builder.Default
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToMany
@@ -43,4 +46,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private Set<Project> projects = new HashSet<>();
+
+    @Builder.Default
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
+    private Set<Issue> assignedIssues = new HashSet<>();
+
+    @Builder.Default
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "observers")
+    private Set<Issue> observingIssues = new HashSet<>();
 }

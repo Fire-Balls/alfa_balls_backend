@@ -6,12 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.repository.ProjectRepository;
 import org.fireballs.alfaballs.app.repository.TypeRepository;
 import org.fireballs.alfaballs.domain.Project;
-import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.domain.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -22,7 +20,6 @@ public class ProjectService {
     private final TypeRepository typeRepository;
     private final UserService userService;
 
-    @Transactional
     public Project saveProject(Project project) {
         if (project == null) {
             throw new IllegalArgumentException("Project is null");
@@ -45,6 +42,20 @@ public class ProjectService {
         return savedProject;
     }
 
+     public Project updateProject(long existingProjectId, Project newProject) {
+        if (newProject == null) {
+            throw new IllegalArgumentException("New project is null");
+        }
+
+        Project existingProject = getProjectById(existingProjectId);
+
+        existingProject.setName(newProject.getName());
+        //todo issuecode probably doesnt change
+        existingProject.setCode(newProject.getCode());
+
+        return saveProject(existingProject);
+     }
+
     public Project getProjectById(long projectId) {
         var searchedGame = projectRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Project with id " + projectId + " not found"));
@@ -62,25 +73,22 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    @Transactional
     public void addUserToProject(Long projectId, Long userId) {
         Project project = getProjectById(projectId);
         User user = userService.getUserById(userId);
 
         project.getUsers().add(user);
-        user.getProjects().add(project); // нужно для синхронизации bi-directional связи
+        user.getProjects().add(project);
 
-        // Либо сохранение проекта, либо пользователя — в зависимости от настроек каскада
         saveProject(project);
     }
 
-    @Transactional
     public void removeUserFromProject(Long projectId, Long userId) {
         Project project = getProjectById(projectId);
         User user = userService.getUserById(userId);
 
         project.getUsers().remove(user);
-        user.getProjects().remove(project); // также синхронизируем обратную сторону
+        user.getProjects().remove(project);
 
         saveProject(project);
     }

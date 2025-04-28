@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-
 @Component
 public class ProjectShortcutAssembler extends RepresentationModelAssemblerSupport<Project, ProjectDto.Shortcut> {
     public ProjectShortcutAssembler() {
@@ -32,8 +31,6 @@ public class ProjectShortcutAssembler extends RepresentationModelAssemblerSuppor
                 .id(projectDto.getProjectId())
                 .name(projectDto.getProjectName())
                 .code(projectDto.getProjectCode())
-                .boards(new ArrayList<>())
-                .users(new HashSet<>())
                 .build();
     }
 }

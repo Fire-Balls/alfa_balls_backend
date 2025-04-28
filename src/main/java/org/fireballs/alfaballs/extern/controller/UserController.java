@@ -38,12 +38,7 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto.Details> updateUser(@PathVariable Long userId,
                                               @Validated(PostPutGroup.class) @RequestBody UserDto.Shortcut userDto) {
-        User existingUser = userService.getUserById(userId);
-        existingUser.setName(userDto.getFullName());
-        existingUser.setEmail(userDto.getEmail());
-        existingUser.setAvatar(userDto.getAvatar().getBytes());
-
-        User updatedUser = userService.saveUser(existingUser);
+        User updatedUser = userService.updateUser(userId, userShortcutAssembler.toEntity(userDto));
         return new ResponseEntity<>(userDetailsAssembler.toModel(updatedUser), HttpStatus.OK);
     }
 
