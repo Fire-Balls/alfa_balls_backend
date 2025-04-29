@@ -11,12 +11,14 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "epics")
+@NoArgsConstructor
 public class Epic extends Issue {
 
-    @OneToMany(mappedBy = "epic", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Issue> tasks = new ArrayList<>();
+    private String debugString;
+
+//    @OneToMany(mappedBy = "epic", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Issue> tasks = new ArrayList<>();
 }

@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.assembler;
+package org.fireballs.alfaballs.extern.assembler.details;
 
 import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.extern.controller.TypeController;
@@ -18,6 +18,7 @@ public class TypeAssembler extends RepresentationModelAssemblerSupport<Type, Typ
 
         typeDto.setId(entity.getId());
         typeDto.setName(entity.getName());
+        typeDto.setDefault(entity.isDefault());
 
         return typeDto;
     }
@@ -26,6 +27,7 @@ public class TypeAssembler extends RepresentationModelAssemblerSupport<Type, Typ
         return Type.builder()
                 .id(dto.getId())
                 .name(dto.getName())
+                .isDefault(dto.isDefault())
                 .build();
     }
 }

@@ -3,8 +3,8 @@ package org.fireballs.alfaballs.extern.controller;
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.ProjectService;
 import org.fireballs.alfaballs.domain.Project;
-import org.fireballs.alfaballs.extern.assembler.ProjectDetailsAssembler;
-import org.fireballs.alfaballs.extern.assembler.ProjectShortcutAssembler;
+import org.fireballs.alfaballs.extern.assembler.details.ProjectDetailsAssembler;
+import org.fireballs.alfaballs.extern.assembler.shortcut.ProjectShortcutAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
 import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
 import org.fireballs.alfaballs.extern.dto.newdtos.ProjectDto;
@@ -41,33 +41,30 @@ public class ProjectController {
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDto.Shortcut> getProjectById(@PathVariable Long projectId) {
         Project retrievedProject = projectService.getProjectById(projectId);
-        return new ResponseEntity<>(projectShortcutAssembler.toModel(retrievedProject), HttpStatus.OK);
+        return ResponseEntity.ok(projectShortcutAssembler.toModel(retrievedProject));
     }
 
     @PutMapping("/{projectId}")
     public ResponseEntity<ProjectDto.Shortcut> updateProjectById(@PathVariable Long projectId,
                                                         @Validated(PostPutGroup.class) @RequestBody ProjectDto.Shortcut projectDto) {
         Project updatedProject = projectService.updateProject(projectId, projectShortcutAssembler.toEntity(projectDto));
-        return new ResponseEntity<>(projectShortcutAssembler.toModel(updatedProject), HttpStatus.OK);
+        return ResponseEntity.ok(projectShortcutAssembler.toModel(updatedProject));
     }
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<MessageDto> deleteProjectById(@PathVariable Long projectId) {
         projectService.deleteProject(projectId);
+        return ResponseEntity.ok(new MessageDto("Project with ID " + projectId + " has been deleted"));
 
-        MessageDto response = new MessageDto();
-        response.setMessage("Project with ID " + projectId + " has been deleted");
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{projectId}/full")
     public ResponseEntity<ProjectDto.Details> getProjectDetailsById(@PathVariable Long projectId) {
         Project retrievedProject = projectService.getProjectById(projectId);
-        return new ResponseEntity<>(projectDetailsAssembler.toModel(retrievedProject), HttpStatus.OK);
+        return ResponseEntity.ok(projectDetailsAssembler.toModel(retrievedProject));
     }
 
-    @PutMapping("/{projectId}/users/{userId}")
+    @PatchMapping("/{projectId}/users/{userId}")
     public ResponseEntity<Void> addUserToProject(@PathVariable Long projectId, @PathVariable Long userId) {
         projectService.addUserToProject(projectId, userId);
         return ResponseEntity.ok().build();
@@ -76,6 +73,6 @@ public class ProjectController {
     @DeleteMapping("/{projectId}/users/{userId}")
     public ResponseEntity<Void> removeUserFromProject(@PathVariable Long projectId, @PathVariable Long userId) {
         projectService.removeUserFromProject(projectId, userId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

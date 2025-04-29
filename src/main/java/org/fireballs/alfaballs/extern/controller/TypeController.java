@@ -3,7 +3,7 @@ package org.fireballs.alfaballs.extern.controller;
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.TypeService;
 import org.fireballs.alfaballs.domain.Type;
-import org.fireballs.alfaballs.extern.assembler.TypeAssembler;
+import org.fireballs.alfaballs.extern.assembler.details.TypeAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
 import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
 import org.fireballs.alfaballs.extern.dto.newdtos.TypeDto;
@@ -31,8 +31,7 @@ public class TypeController {
     public ResponseEntity<TypeDto> getType(@PathVariable("projectId") Long projectId,
                                            @PathVariable("typeId") Long typeId) {
         Type retrievedType = typeService.getTypeById((typeId));
-
-        return new ResponseEntity<>(typeAssembler.toModel(retrievedType), HttpStatus.OK);
+        return ResponseEntity.ok(typeAssembler.toModel(retrievedType));
     }
 
     @PutMapping("/{typeId}")
@@ -40,17 +39,14 @@ public class TypeController {
                                               @PathVariable("typeId") Long typeId,
                                               @Validated(PostPutGroup.class) @RequestBody TypeDto typeDto) {
         Type updatedType = typeService.updateType(typeId, typeAssembler.toEntity(typeDto));
-        return new ResponseEntity<>(typeAssembler.toModel(updatedType), HttpStatus.OK);
+        return ResponseEntity.ok(typeAssembler.toModel(updatedType));
     }
 
     @DeleteMapping("/{typeId}")
     public ResponseEntity<MessageDto> deleteType(@PathVariable("projectId") Long projectId,
                                                  @PathVariable("typeId") Long typeId) {
         typeService.deleteType(typeId);
+        return ResponseEntity.ok(new MessageDto("Type with ID " + typeId + " has been deleted"));
 
-        MessageDto response = new MessageDto();
-        response.setMessage("Type with ID " + typeId + " has been deleted");
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

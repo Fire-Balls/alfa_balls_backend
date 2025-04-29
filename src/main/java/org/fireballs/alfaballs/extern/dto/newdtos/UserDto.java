@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.groups.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
@@ -20,15 +21,15 @@ public interface UserDto {
         @NotNull
         private Long id;
 
-        @NotNull(groups = PostPutGroup.class)
+        @NotNull(groups = {PostPutGroup.class, Default.class})
         @Size(min = 1, max = 255)
         private String fullName;
 
-        @NotNull(groups = PostPutGroup.class)
+        @NotNull(groups = {PostPutGroup.class, Default.class})
         @Email
         private String email;
 
-        @NotNull(groups = PostPutGroup.class)
+        @NotNull(groups = {PostPutGroup.class, Default.class})
         private String avatar;
     }
 
@@ -39,18 +40,19 @@ public interface UserDto {
         @NotNull
         private Long id;
 
-        @NotNull(groups = PostPutGroup.class)
+        @NotNull(groups = {PostPutGroup.class, Default.class})
         @Size(min = 1, max = 255)
         private String fullName;
 
-        @NotNull(groups = PostPutGroup.class)
+        @NotNull(groups = {PostPutGroup.class, Default.class})
         @Email
         private String email;
 
-        @NotNull(groups = PostPutGroup.class)
+        @NotNull(groups = {PostPutGroup.class, Default.class})
         private String avatar;
 
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        private Set<ProjectDto.@Valid Shortcut> projects;
+        @NotNull
+        private Set<ProjectDto.Shortcut> projects;
     }
 }

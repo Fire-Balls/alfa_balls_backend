@@ -1,6 +1,8 @@
-package org.fireballs.alfaballs.extern.assembler;
+package org.fireballs.alfaballs.extern.assembler.details;
 
 import org.fireballs.alfaballs.domain.Board;
+import org.fireballs.alfaballs.extern.assembler.shortcut.IssueShortcutAssembler;
+import org.fireballs.alfaballs.extern.assembler.shortcut.ProjectShortcutAssembler;
 import org.fireballs.alfaballs.extern.controller.ProjectController;
 import org.fireballs.alfaballs.extern.dto.newdtos.BoardDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -12,14 +14,14 @@ import java.util.stream.Collectors;
 
 @Component
 public class BoardDetailsAssembler extends RepresentationModelAssemblerSupport<Board, BoardDto.Details> {
-    private final IssueAssembler issueAssembler;
+    private final IssueShortcutAssembler issueShortcutAssembler;
     private final ProjectShortcutAssembler projectShortcutAssembler;
     private final StatusAssembler statusAssembler;
 
-    public BoardDetailsAssembler(IssueAssembler issueAssembler,
+    public BoardDetailsAssembler(IssueShortcutAssembler issueShortcutAssembler,
                                  ProjectShortcutAssembler projectShortcutAssembler, StatusAssembler statusAssembler) {
         super(ProjectController.class, BoardDto.Details.class);
-        this.issueAssembler = issueAssembler;
+        this.issueShortcutAssembler = issueShortcutAssembler;
         this.projectShortcutAssembler = projectShortcutAssembler;
         this.statusAssembler = statusAssembler;
     }
@@ -33,7 +35,7 @@ public class BoardDetailsAssembler extends RepresentationModelAssemblerSupport<B
         dto.setProject(projectShortcutAssembler.toModel(entity.getProject()));
         dto.setIssuesCount(entity.getIssues().size());
         dto.setIssues(entity.getIssues().stream()
-                .map(issueAssembler::toModel)
+                .map(issueShortcutAssembler::toModel)
                 .toList());
         dto.setStatuses(entity.getStatuses().stream()
                 .map(statusAssembler::toModel)
@@ -48,7 +50,7 @@ public class BoardDetailsAssembler extends RepresentationModelAssemblerSupport<B
                 .name(boardDto.getBoardName())
                 .project(boardDto.getProject() == null ? null : projectShortcutAssembler.toEntity(boardDto.getProject()))
                 .issues(boardDto.getIssues() == null ? new ArrayList<>() : boardDto.getIssues().stream()
-                        .map(issueAssembler::toEntity)
+                        .map(issueShortcutAssembler::toEntity)
                         .toList())
                 .statuses(boardDto.getStatuses() == null ? new HashSet<>() : boardDto.getStatuses().stream()
                         .map(statusAssembler::toEntity)

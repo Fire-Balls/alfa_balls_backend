@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.assembler;
+package org.fireballs.alfaballs.extern.assembler.shortcut;
 
 import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.extern.controller.ProjectController;

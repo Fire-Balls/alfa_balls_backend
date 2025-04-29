@@ -1,7 +1,10 @@
-package org.fireballs.alfaballs.extern.assembler;
+package org.fireballs.alfaballs.extern.assembler.details;
 
 import org.fireballs.alfaballs.app.service.IssueService;
 import org.fireballs.alfaballs.domain.Project;
+import org.fireballs.alfaballs.extern.assembler.shortcut.BoardShortcutAssembler;
+import org.fireballs.alfaballs.extern.assembler.shortcut.IssueShortcutAssembler;
+import org.fireballs.alfaballs.extern.assembler.shortcut.UserShortcutAssembler;
 import org.fireballs.alfaballs.extern.controller.ProjectController;
 import org.fireballs.alfaballs.extern.dto.newdtos.ProjectDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -13,18 +16,18 @@ import java.util.stream.Collectors;
 
 @Component
 public class ProjectDetailsAssembler extends RepresentationModelAssemblerSupport<Project, ProjectDto.Details> {
-    private final IssueAssembler issueAssembler;
+    private final IssueShortcutAssembler issueShortcutAssembler;
     private final BoardShortcutAssembler boardShortcutAssembler;
     private final IssueService issueService;
     private final UserShortcutAssembler userShortcutAssembler;
     private final TypeAssembler typeAssembler;
 
-    public ProjectDetailsAssembler(IssueAssembler issueAssembler,
+    public ProjectDetailsAssembler(IssueShortcutAssembler issueShortcutAssembler,
                                    BoardShortcutAssembler boardAssembler,
                                    IssueService issueService,
                                    UserShortcutAssembler userShortcutAssembler, TypeAssembler typeAssembler) {
         super(ProjectController.class, ProjectDto.Details.class);
-        this.issueAssembler = issueAssembler;
+        this.issueShortcutAssembler = issueShortcutAssembler;
         this.boardShortcutAssembler = boardAssembler;
         this.issueService = issueService;
         this.userShortcutAssembler = userShortcutAssembler;
@@ -44,7 +47,7 @@ public class ProjectDetailsAssembler extends RepresentationModelAssemblerSupport
                 .toList());
 
         dto.setIssues(issueService.getAllIssuesByProjectId(entity.getId()).stream()
-                .map(issueAssembler::toModel)
+                .map(issueShortcutAssembler::toModel)
                 .toList());
 
         dto.setParticipants(entity.getUsers().stream()

@@ -49,10 +49,6 @@ public class Issue {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> observers = new HashSet<>();
 
-//    @Builder.Default
-//    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<IssueFieldValue> fieldValues = new HashSet<>();
-
     @Builder.Default
     @ManyToMany
     @JoinTable(name = "issue_dependencies",
@@ -60,24 +56,13 @@ public class Issue {
             inverseJoinColumns = @JoinColumn(name = "depends_on_issue_id"))
     private Set<Issue> dependencies = new HashSet<>();
 
-/*
-сделал nullable т.к. при добавлении в бд epic, орм кидала ошибку
-*/
     @ManyToOne
-    @JoinColumn(name = "epic_id")
-    private Epic epic;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User assignee;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Priority priority;
 
     @Builder.Default
     @Column(nullable = false, updatable = false)
@@ -95,11 +80,23 @@ public class Issue {
     @Column(name = "tag")
     private List<String> tags = new ArrayList<>();
 
+//    @ManyToOne(optional = false)
+//    @JoinColumn(name = "epic_id", nullable = false)
+//    private Epic epic;
+//
+//    @Builder.Default
+//    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<IssueFieldValue> fieldValues = new HashSet<>();
+//
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private Priority priority;
+
 //    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<File> files = new ArrayList<>();
 
-    public enum Priority {
-        HIGH,
-        LOW
-    }
+//    public enum Priority {
+//        HIGH,
+//        LOW
+//    }
 }

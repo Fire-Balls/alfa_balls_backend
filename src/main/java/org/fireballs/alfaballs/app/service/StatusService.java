@@ -46,7 +46,11 @@ public class StatusService {
     }
 
     public void deleteStatus(long statusId) {
-        statusRepository.deleteById(statusId);
-        log.info("Status {} was deleted", statusId);
+        if (!getStatusById(statusId).isDefault()) {
+            statusRepository.deleteById(statusId);
+            log.info("Status {} was deleted", statusId);
+        } else {
+            throw new IllegalArgumentException("Status with id " + statusId + " is default");
+        }
     }
 }

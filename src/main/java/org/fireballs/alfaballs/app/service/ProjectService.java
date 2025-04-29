@@ -6,10 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.repository.ProjectRepository;
 import org.fireballs.alfaballs.app.repository.TypeRepository;
 import org.fireballs.alfaballs.domain.Project;
+import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.domain.User;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -28,21 +31,24 @@ public class ProjectService {
         Project savedProject = projectRepository.save(project);
         log.info("Project {} was saved", project.getId());
 
-        //todo переделать, тк сейчас каждый раз сохраняется каждый дефолтный тип по новому.
+        //todo мб переделать, тк сейчас каждый раз сохраняется каждый дефолтный тип по новому.
         // сейчас сделано для отладки эндпоинта
-//        Set<Type> defaultTypes = Set.of(
-//                new Type(null, "Bug", savedProject),
-//                new Type(null, "Story", savedProject),
-//                new Type(null, "Feature", savedProject)
-//        );
 
-//        typeRepository.saveAll(defaultTypes);
-//        project.setTypes(defaultTypes);
+        if (project.getTypes().isEmpty()) {
+            Set<Type> defaultTypes = new HashSet<>() {{
+                add(new Type(null, "Bug", savedProject, true));
+                add(new Type(null, "Story", savedProject, true));
+                add(new Type(null, "Feature", savedProject, true));
+            }};
+
+            typeRepository.saveAll(defaultTypes);
+            savedProject.setTypes(defaultTypes);
+        }
 
         return savedProject;
     }
 
-     public Project updateProject(long existingProjectId, Project newProject) {
+    public Project updateProject(long existingProjectId, Project newProject) {
         if (newProject == null) {
             throw new IllegalArgumentException("New project is null");
         }
@@ -54,7 +60,7 @@ public class ProjectService {
         existingProject.setCode(newProject.getCode());
 
         return saveProject(existingProject);
-     }
+    }
 
     public Project getProjectById(long projectId) {
         var searchedGame = projectRepository.findById(projectId)

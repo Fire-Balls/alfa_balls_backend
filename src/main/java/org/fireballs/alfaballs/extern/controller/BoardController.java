@@ -3,8 +3,8 @@ package org.fireballs.alfaballs.extern.controller;
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.BoardService;
 import org.fireballs.alfaballs.domain.Board;
-import org.fireballs.alfaballs.extern.assembler.BoardDetailsAssembler;
-import org.fireballs.alfaballs.extern.assembler.BoardShortcutAssembler;
+import org.fireballs.alfaballs.extern.assembler.details.BoardDetailsAssembler;
+import org.fireballs.alfaballs.extern.assembler.shortcut.BoardShortcutAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
 import org.fireballs.alfaballs.extern.dto.newdtos.BoardDto;
 import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
@@ -24,41 +24,32 @@ public class BoardController {
 
     @PostMapping
     public ResponseEntity<BoardDto.Details> createBoard(@PathVariable("projectId") Long projectId,
-                                                @Validated(PostPutGroup.class) @RequestBody BoardDto.Shortcut boardDto) {
+                                                        @Validated(PostPutGroup.class) @RequestBody BoardDto.Shortcut boardDto) {
 
-        Board savedBoard = boardService.saveNewBoard(projectId, boardShortcutAssembler.toEntity(boardDto));
+        Board savedBoard = boardService.saveBoard(projectId, boardShortcutAssembler.toEntity(boardDto));
         return new ResponseEntity<>(boardDetailsAssembler.toModel(savedBoard), HttpStatus.CREATED);
     }
 
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardDto.Details> getBoard(@PathVariable("projectId") Long projectId,
-                                             @PathVariable("boardId") Long boardId) {
+                                                     @PathVariable("boardId") Long boardId) {
 
         Board retrievedBoard = boardService.getBoardById((boardId));
-
-        return new ResponseEntity<>(boardDetailsAssembler.toModel(retrievedBoard), HttpStatus.OK);
+        return ResponseEntity.ok(boardDetailsAssembler.toModel(retrievedBoard));
     }
 
     @PutMapping("/{boardId}")
     public ResponseEntity<BoardDto.Details> updateBoard(@PathVariable("projectId") Long projectId,
-                                                @PathVariable("boardId") Long boardId,
-                                                @Validated(PostPutGroup.class) @RequestBody BoardDto.Shortcut boardDto) {
-        //todo переделать
-        Board existingBoard = boardService.getBoardById((boardId));
-        existingBoard.setName(boardDto.getBoardName()); //todo хрень
-
-        Board updatedBoard = boardService.updateBoard(existingBoard);
-        return new ResponseEntity<>(boardDetailsAssembler.toModel(updatedBoard), HttpStatus.OK);
+                                                        @PathVariable("boardId") Long boardId,
+                                                        @Validated(PostPutGroup.class) @RequestBody BoardDto.Shortcut boardDto) {
+        Board updatedBoard = boardService.updateBoard(boardId, boardShortcutAssembler.toEntity(boardDto));
+        return ResponseEntity.ok(boardDetailsAssembler.toModel(updatedBoard));
     }
 
     @DeleteMapping("/{boardId}")
     public ResponseEntity<MessageDto> deleteBoard(@PathVariable("projectId") Long projectId,
-                                            @PathVariable("boardId") Long boardId) {
+                                                  @PathVariable("boardId") Long boardId) {
         boardService.deleteBoard(boardId);
-
-        MessageDto response = new MessageDto();
-        response.setMessage("Board with ID " + boardId + " has been deleted");
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(new MessageDto("Board with ID " + boardId + " has been deleted"));
     }
 }

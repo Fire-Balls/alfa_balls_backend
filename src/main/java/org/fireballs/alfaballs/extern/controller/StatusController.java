@@ -3,7 +3,7 @@ package org.fireballs.alfaballs.extern.controller;
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.StatusService;
 import org.fireballs.alfaballs.domain.Status;
-import org.fireballs.alfaballs.extern.assembler.StatusAssembler;
+import org.fireballs.alfaballs.extern.assembler.details.StatusAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
 import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
 import org.fireballs.alfaballs.extern.dto.newdtos.StatusDto;
@@ -34,7 +34,7 @@ public class StatusController {
                                                @PathVariable("statusId") Long statusId) {
         Status retrievedStatus = statusService.getStatusById((statusId));
 
-        return new ResponseEntity<>(statusAssembler.toModel(retrievedStatus), HttpStatus.OK);
+        return ResponseEntity.ok(statusAssembler.toModel(retrievedStatus));
     }
 
     @PutMapping("/{statusId}")
@@ -43,7 +43,7 @@ public class StatusController {
                                                 @PathVariable("statusId") Long statusId,
                                                 @Validated(PostPutGroup.class) @RequestBody StatusDto statusDto) {
         Status updatedStatus = statusService.updateStatus(statusId, statusAssembler.toEntity(statusDto));
-        return new ResponseEntity<>(statusAssembler.toModel(updatedStatus), HttpStatus.OK);
+        return ResponseEntity.ok(statusAssembler.toModel(updatedStatus));
     }
 
     @DeleteMapping("/{statusId}")
@@ -51,10 +51,7 @@ public class StatusController {
                                                  @PathVariable("boardId") Long boardId,
                                                  @PathVariable("statusId") Long statusId) {
         statusService.deleteStatus(statusId);
+        return ResponseEntity.ok(new MessageDto("Status with ID " + statusId + " has been deleted"));
 
-        MessageDto response = new MessageDto();
-        response.setMessage("Status with ID " + statusId + " has been deleted");
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

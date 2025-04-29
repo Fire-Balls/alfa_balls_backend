@@ -1,6 +1,7 @@
-package org.fireballs.alfaballs.extern.assembler;
+package org.fireballs.alfaballs.extern.assembler.details;
 
 import org.fireballs.alfaballs.domain.User;
+import org.fireballs.alfaballs.extern.assembler.shortcut.ProjectShortcutAssembler;
 import org.fireballs.alfaballs.extern.controller.UserController;
 import org.fireballs.alfaballs.extern.dto.newdtos.UserDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;

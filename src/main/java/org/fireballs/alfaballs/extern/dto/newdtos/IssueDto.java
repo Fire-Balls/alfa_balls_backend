@@ -1,53 +1,121 @@
 package org.fireballs.alfaballs.extern.dto.newdtos;
 
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.fireballs.alfaballs.extern.dto.EpicShortcutDto;
-import org.fireballs.alfaballs.extern.dto.FieldDto;
-import org.fireballs.alfaballs.extern.dto.ObserverDto;
+import org.fireballs.alfaballs.extern.dto.newdtos.validation.IsAfter;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class IssueDto extends RepresentationModel<IssueDto> {
-    @NotNull(message = "ID is required")
-    @Positive(message = "ID must be positive")
-    private Long id;
+public interface IssueDto {
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    class CreateUpdate extends RepresentationModel<CreateUpdate> {
+        @NotBlank
+        private String title;
 
-    @NotNull(message = "Project ID is required")
-    @Positive(message = "Project ID must be positive")
-    private Long projectId;
+        private String description;
 
-    @NotBlank(message = "Title is required")
-    @Size(max = 200, message = "Title must be less than 200 characters")
-    private String title;
+        @NotNull
+        private Long authorId;
 
-    @NotBlank(message = "Type is required")
-    @Pattern(regexp = "^(BUG|TASK|FEATURE)$", message = "Type must be BUG, TASK or FEATURE")
-    private String type;
+        @NotNull
+        private Long assigneeId;
 
-    @NotBlank(message = "Status is required")
-    @Pattern(regexp = "^(OPEN|IN_PROGRESS|RESOLVED|CLOSED)$", message = "Invalid status value")
-    private String status;
+        @NotNull
+        private Long typeId;
 
-    @NotBlank(message = "Assignee is required")
-    @Email(message = "Assignee must be a valid email")
-    private String assignee;
+        @NotNull
+        private Long statusId;
 
-    @NotNull
-    private List<@Valid FieldDto> fields;
+        private LocalDateTime deadline;
 
-    @NotNull
-    private List<@Valid IssueDto> depends;
+        @NotNull
+        private List<String> tags;
+    }
 
-    @NotNull(message = "Observers list required")
-    private List<@Valid ObserverDto> observers;
 
-    @Valid
-    @NotNull
-    private EpicShortcutDto epic;
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @IsAfter(afterField = "createdAt", beforeField = "deadline")
+    class Shortcut extends RepresentationModel<Shortcut> {
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        @PositiveOrZero
+        private Long id;
+
+        @NotBlank
+        private String title;
+
+        @NotNull
+        private TypeDto type;
+
+        @NotNull
+        private StatusDto status;
+
+        @NotNull
+        private UserDto.Shortcut assignee;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotBlank
+        @Pattern(regexp = "^[A-Z0-9_]{3}-[0-9]+$")
+        private String code;
+
+        @NotNull
+        private List<String> tags;
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @IsAfter(afterField = "createdAt", beforeField = "deadline")
+    class Details extends RepresentationModel<Details> {
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        @PositiveOrZero
+        private Long id;
+
+        @NotBlank
+        private String title;
+
+        @NotBlank
+        private String description;
+
+        @NotNull
+        private TypeDto type;
+
+        @NotNull
+        private StatusDto status;
+
+        @NotNull
+        private UserDto.Shortcut assignee;
+
+        @NotNull
+        private UserDto.Shortcut author;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotBlank
+        @Pattern(regexp = "^[A-Z0-9_]{3}-[0-9]+$")
+        private String code;
+
+        @NotNull
+        private List<String> tags;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private LocalDateTime createdAt;
+
+        private LocalDateTime deadline;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private Set<UserDto.Shortcut> observers;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotNull
+        private Set<IssueDto.Shortcut> depends;
+    }
 }

@@ -1,13 +1,10 @@
-package org.fireballs.alfaballs.extern.assembler;
+package org.fireballs.alfaballs.extern.assembler.shortcut;
 
 import org.fireballs.alfaballs.domain.Project;
 import org.fireballs.alfaballs.extern.controller.ProjectController;
 import org.fireballs.alfaballs.extern.dto.newdtos.ProjectDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 
 @Component
 public class ProjectShortcutAssembler extends RepresentationModelAssemblerSupport<Project, ProjectDto.Shortcut> {

@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.assembler;
+package org.fireballs.alfaballs.extern.assembler.details;
 
 import org.fireballs.alfaballs.domain.Status;
 import org.fireballs.alfaballs.extern.controller.StatusController;
@@ -18,6 +18,7 @@ public class StatusAssembler extends RepresentationModelAssemblerSupport<Status,
 
         statusDto.setId(entity.getId());
         statusDto.setName(entity.getName());
+        statusDto.setDefault(entity.isDefault());
 
         return statusDto;
     }
@@ -26,6 +27,7 @@ public class StatusAssembler extends RepresentationModelAssemblerSupport<Status,
         return Status.builder()
                 .id(dto.getId())
                 .name(dto.getName())
+                .isDefault(dto.isDefault())
                 .build();
     }
 }

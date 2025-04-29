@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.assembler;
+package org.fireballs.alfaballs.extern.assembler.shortcut;
 
 import org.fireballs.alfaballs.domain.User;
 import org.fireballs.alfaballs.extern.controller.UserController;
@@ -34,7 +34,6 @@ public class UserShortcutAssembler extends RepresentationModelAssemblerSupport<U
                 .name(userDto.getFullName())
                 .email(userDto.getEmail())
                 .avatar(Base64.getDecoder().decode(userDto.getAvatar()))
-                .projects(new HashSet<>())
                 .build();
     }
 }

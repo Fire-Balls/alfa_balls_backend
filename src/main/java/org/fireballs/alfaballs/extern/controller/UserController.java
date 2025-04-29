@@ -1,11 +1,10 @@
 package org.fireballs.alfaballs.extern.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.UserService;
 import org.fireballs.alfaballs.domain.User;
-import org.fireballs.alfaballs.extern.assembler.UserDetailsAssembler;
-import org.fireballs.alfaballs.extern.assembler.UserShortcutAssembler;
+import org.fireballs.alfaballs.extern.assembler.details.UserDetailsAssembler;
+import org.fireballs.alfaballs.extern.assembler.shortcut.UserShortcutAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
 import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
 import org.fireballs.alfaballs.extern.dto.newdtos.UserDto;
@@ -32,23 +31,20 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto.Details> getUser(@PathVariable Long userId) {
         User retrievedUser = userService.getUserById(userId);
-        return new ResponseEntity<>(userDetailsAssembler.toModel(retrievedUser), HttpStatus.OK);
+        return ResponseEntity.ok(userDetailsAssembler.toModel(retrievedUser));
     }
 
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto.Details> updateUser(@PathVariable Long userId,
                                               @Validated(PostPutGroup.class) @RequestBody UserDto.Shortcut userDto) {
         User updatedUser = userService.updateUser(userId, userShortcutAssembler.toEntity(userDto));
-        return new ResponseEntity<>(userDetailsAssembler.toModel(updatedUser), HttpStatus.OK);
+        return ResponseEntity.ok(userDetailsAssembler.toModel(updatedUser));
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<MessageDto> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
+        return ResponseEntity.ok(new MessageDto("User with ID " + userId + " has been deleted"));
 
-        MessageDto response = new MessageDto();
-        response.setMessage("User with ID " + userId + " has been deleted");
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

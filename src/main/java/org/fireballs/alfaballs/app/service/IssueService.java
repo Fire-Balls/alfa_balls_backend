@@ -6,11 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.repository.IssueRepository;
 import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.domain.Issue;
-import org.fireballs.alfaballs.domain.Project;
 import org.fireballs.alfaballs.domain.User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class IssueService {
     private final BoardService boardService;
     private final UserService userService;
 
-    public Issue saveNewIssue(long boardId, Issue issue) {
+    public Issue saveIssue(long boardId, Issue issue) {
         Board board = boardService.getBoardById(boardId);
         String code = board.getProject().getCode();
         int issueCount = board.getProject().incrementAndGetLastIssueNumber();
@@ -31,22 +29,48 @@ public class IssueService {
         issue.setBoard(board);
         issue.setCode(code + "-" + issueCount);
 
+        if (issue.getType() == null || !board.getProject().getTypes().contains(issue.getType())) {
+            issue.setType(board.getProject().getTypes().stream()
+                    .filter(type -> type.isDefault() && type.getName().equals("Feature"))
+                    .findFirst()
+                    .orElseThrow(IllegalArgumentException::new));
+        }
+
+        if (issue.getStatus() == null || !board.getStatuses().contains(issue.getStatus())) {
+            issue.setStatus(board.getStatuses().stream()
+                    .filter(status -> status.isDefault() && status.getName().equals("TODO"))
+                    .findFirst()
+                    .orElseThrow(IllegalArgumentException::new));
+        }
+
         Issue savedIssue = issueRepository.save(issue);
         log.info("New issue {} was created in board {}", savedIssue.getId(), board.getId());
 
         return savedIssue;
     }
 
-    public Issue updateIssue(Issue issue) {
+    public Issue updateIssue(long existingIssueId, Issue issue) {
         if (issue == null || issue.getBoard() == null) {
             throw new IllegalArgumentException("Issue or board is null");
         }
 
-        issueRepository.save(issue);
-        log.info("Issue {} was saved", issue.getId());
+        if (issue.getDeadline() == null || issue.getDeadline().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Illegal new deadline");
+        }
 
-        return issue;
+        Issue existingIssue = getIssueById(existingIssueId);
+
+        existingIssue.setTitle(issue.getTitle());
+        existingIssue.setDescription(issue.getDescription());
+        existingIssue.setAssignee(issue.getAssignee());
+        existingIssue.setStatus(issue.getStatus());
+        existingIssue.setType(issue.getType());
+        existingIssue.setTags(issue.getTags());
+        existingIssue.setDeadline(issue.getDeadline());
+
+        return saveIssue(issue.getBoard().getId(), existingIssue);
     }
+
 
     public Issue getIssueById(long issueId) {
         var searchedGame = issueRepository.findById(issueId)
@@ -65,34 +89,12 @@ public class IssueService {
         return issueRepository.findAllByProjectId(projectId);
     }
 
-    public void addAssigneeToIssue(long issueId, long userId) {
-        Issue issue = getIssueById(issueId);
-        User user = userService.getUserById(userId);
-
-        issue.setAssignee(user);
-        user.getAssignedIssues().add(issue);
-
-        updateIssue(issue);
-    }
-
-    public void removeAssigneeFromIssue(long issueId, long userId) {
-        Issue issue = getIssueById(issueId);
-        User user = userService.getUserById(userId);
-
-        issue.setAssignee(null);
-        user.getAssignedIssues().remove(issue);
-
-        updateIssue(issue);
-    }
-
     public void addObserverToIssue(long issueId, long userId) {
         Issue issue = getIssueById(issueId);
         User user = userService.getUserById(userId);
 
         issue.getObservers().add(user);
-        user.getObservingIssues().add(issue);
-
-        updateIssue(issue);
+        saveIssue(issue.getBoard().getId(), issue);
     }
 
     public void removeObserverFromIssue(long issueId, long userId) {
@@ -100,33 +102,22 @@ public class IssueService {
         User user = userService.getUserById(userId);
 
         issue.getObservers().remove(user);
-        user.getObservingIssues().remove(issue);
-
-        updateIssue(issue);
+        saveIssue(issue.getBoard().getId(), issue);
     }
 
-    public void addTag(long issueId, String tag) {
+    public void addDependency(long issueId, long otherIssueId) {
         Issue issue = getIssueById(issueId);
-        issue.getTags().add(tag);
-        updateIssue(issue);
+        Issue otherIssue = getIssueById(otherIssueId);
+
+        issue.getDependencies().add(otherIssue);
+        saveIssue(issue.getBoard().getId(), issue);
     }
 
-    public void removeTag(long issueId, String tag) {
+    public void removeDependency(long issueId, long otherIssueId) {
         Issue issue = getIssueById(issueId);
-        issue.getTags().remove(tag);
-        updateIssue(issue);
+        Issue otherIssue = getIssueById(otherIssueId);
+
+        issue.getDependencies().remove(otherIssue);
+        saveIssue(issue.getBoard().getId(), issue);
     }
-
-    public void modeDeadline(long issueId, LocalDateTime newDeadline) {
-        Issue issue = getIssueById(issueId);
-        LocalDateTime currentDeadline = issue.getDeadline();
-        if (currentDeadline == null || currentDeadline.isBefore(newDeadline)) {
-            issue.setDeadline(newDeadline);
-            updateIssue(issue);
-        } else {
-            throw new IllegalArgumentException("Illegal new deadline");
-        }
-    }
-
-
 }
