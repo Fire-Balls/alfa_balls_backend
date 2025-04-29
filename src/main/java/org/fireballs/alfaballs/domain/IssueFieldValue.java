@@ -11,13 +11,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "issue_field_values")
 public class IssueFieldValue {
-    @Id
+    @EmbeddedId
     private IssueFieldValueId issueFieldValue;
 
+    @MapsId("issue") // название поля в EmbeddedId
     @ManyToOne
     @JoinColumn(name = "issue_id", nullable = false)
     private Issue issue;
 
+    @MapsId("field") // название поля в EmbeddedId
     @ManyToOne
     @JoinColumn(name = "field_id", nullable = false)
     private FieldDefinition field;

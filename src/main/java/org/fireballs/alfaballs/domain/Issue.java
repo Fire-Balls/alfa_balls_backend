@@ -60,8 +60,11 @@ public class Issue {
             inverseJoinColumns = @JoinColumn(name = "depends_on_issue_id"))
     private Set<Issue> dependencies = new HashSet<>();
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "epic_id", nullable = false)
+/*
+сделал nullable т.к. при добавлении в бд epic, орм кидала ошибку
+*/
+    @ManyToOne
+    @JoinColumn(name = "epic_id")
     private Epic epic;
 
     @ManyToOne(optional = false)

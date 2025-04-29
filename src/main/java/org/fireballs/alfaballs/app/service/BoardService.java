@@ -20,7 +20,7 @@ public class BoardService {
 
     public Board saveNewBoard(long projectId, Board board) {
         Project project = projectService.getProjectById(projectId);
-
+        // проще брать project из борда?
         board.setProject(project);
 
         Board savedBoard = boardRepository.save(board);
