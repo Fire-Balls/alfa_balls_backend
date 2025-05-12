@@ -31,7 +31,7 @@ public class IssueService {
 
         if (issue.getType() == null || !board.getProject().getTypes().contains(issue.getType())) {
             issue.setType(board.getProject().getTypes().stream()
-                    .filter(type -> type.isDefault() && type.getName().equals("Feature"))
+                    .filter(type -> type.isDefault() && type.getName().equals("Task"))
                     .findFirst()
                     .orElseThrow(IllegalArgumentException::new));
         }

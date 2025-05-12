@@ -31,14 +31,11 @@ public class ProjectService {
         Project savedProject = projectRepository.save(project);
         log.info("Project {} was saved", project.getId());
 
-        //todo мб переделать, тк сейчас каждый раз сохраняется каждый дефолтный тип по новому.
-        // сейчас сделано для отладки эндпоинта
-
         if (project.getTypes().isEmpty()) {
             Set<Type> defaultTypes = new HashSet<>() {{
                 add(new Type(null, "Bug", savedProject, true));
                 add(new Type(null, "Story", savedProject, true));
-                add(new Type(null, "Feature", savedProject, true));
+                add(new Type(null, "Task", savedProject, true));
             }};
 
             typeRepository.saveAll(defaultTypes);

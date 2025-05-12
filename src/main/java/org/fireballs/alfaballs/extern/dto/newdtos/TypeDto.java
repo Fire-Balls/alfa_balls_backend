@@ -22,5 +22,5 @@ public class TypeDto extends RepresentationModel<TypeDto> {
     private String name;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private boolean isDefault;
+    private boolean common;
 }

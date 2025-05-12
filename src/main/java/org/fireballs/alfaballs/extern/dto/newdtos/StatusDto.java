@@ -22,5 +22,5 @@ public class StatusDto extends RepresentationModel<StatusDto> {
     private String name;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private boolean isDefault;
+    private boolean common;
 }
