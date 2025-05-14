@@ -28,7 +28,7 @@ public class UserDetailsAssembler extends RepresentationModelAssemblerSupport<Us
         userDto.setFullName(entity.getName());
         userDto.setEmail(entity.getEmail());
         //userDto.setRoles(entity.getRole());
-        userDto.setAvatar(Base64.getEncoder().encodeToString(entity.getAvatar()));
+        userDto.setAvatar(entity.getAvatar() == null ? null : Base64.getEncoder().encodeToString(entity.getAvatar()));
 
         userDto.setProjects(entity.getProjects().stream()
                 .map(projectShortcutAssembler::toModel)
@@ -42,7 +42,7 @@ public class UserDetailsAssembler extends RepresentationModelAssemblerSupport<Us
                 .id(userDto.getId())
                 .name(userDto.getFullName())
                 .email(userDto.getEmail())
-                .avatar(Base64.getDecoder().decode(userDto.getAvatar()))
+                .avatar(userDto.getAvatar() == null ? null : Base64.getDecoder().decode(userDto.getAvatar()))
                 .projects(userDto.getProjects() == null ? new HashSet<>() :
                         userDto.getProjects().stream().map(projectShortcutAssembler::toEntity).collect(Collectors.toSet()))
                 .build();

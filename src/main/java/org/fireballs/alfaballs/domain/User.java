@@ -11,28 +11,27 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 254, nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-//    @Column(name = "password_hash", nullable = false)
-//    private String passwordHash;
+    @Column(nullable = false)
+    private String password;
 
     @Column(length = 100)
     private String name;
 
     @Lob
-    @Column(name = "avatar")
+    @Column
     private byte[] avatar;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "role_id", nullable = false)
-//    private Role role;
+    @Enumerated(EnumType.ORDINAL)
+    private Role globalRole;
 
     @Builder.Default
     @EqualsAndHashCode.Exclude
@@ -56,4 +55,9 @@ public class User {
     @ToString.Exclude
     @ManyToMany(mappedBy = "observers")
     private Set<Issue> observingIssues = new HashSet<>();
+
+    public enum Role {
+        USER,
+        ADMIN
+    }
 }

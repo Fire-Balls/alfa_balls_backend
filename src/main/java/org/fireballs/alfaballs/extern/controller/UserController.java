@@ -22,11 +22,12 @@ public class UserController {
     private final UserDetailsAssembler userDetailsAssembler;
     private final UserShortcutAssembler userShortcutAssembler;
 
-    @PostMapping
-    public ResponseEntity<UserDto.Details> createUser(@Validated(PostPutGroup.class) @RequestBody UserDto.Shortcut userDto) {
-        User savedUser = userService.saveUser(userShortcutAssembler.toEntity(userDto));
-        return new ResponseEntity<>(userDetailsAssembler.toModel(savedUser), HttpStatus.CREATED);
-    }
+    // Moved to AuthController
+//    @PostMapping
+//    public ResponseEntity<UserDto.Details> createUser(@Validated(PostPutGroup.class) @RequestBody UserDto.Shortcut userDto) {
+//        User savedUser = userService.saveUser(userShortcutAssembler.toEntity(userDto));
+//        return new ResponseEntity<>(userDetailsAssembler.toModel(savedUser), HttpStatus.CREATED);
+//    }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto.Details> getUser(@PathVariable Long userId) {

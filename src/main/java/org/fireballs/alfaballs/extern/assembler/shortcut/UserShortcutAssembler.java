@@ -23,7 +23,7 @@ public class UserShortcutAssembler extends RepresentationModelAssemblerSupport<U
         userDto.setFullName(entity.getName());
         userDto.setEmail(entity.getEmail());
         //userDto.setRoles(entity.getRole());
-        userDto.setAvatar(Base64.getEncoder().encodeToString(entity.getAvatar()));
+        userDto.setAvatar(entity.getAvatar() == null ? null : Base64.getEncoder().encodeToString(entity.getAvatar()));
 
         return userDto;
     }
@@ -33,7 +33,7 @@ public class UserShortcutAssembler extends RepresentationModelAssemblerSupport<U
                 .id(userDto.getId())
                 .name(userDto.getFullName())
                 .email(userDto.getEmail())
-                .avatar(Base64.getDecoder().decode(userDto.getAvatar()))
+                .avatar(userDto.getAvatar() == null ? null : Base64.getDecoder().decode(userDto.getAvatar()))
                 .build();
     }
 }
