@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -16,16 +17,27 @@ import java.util.function.Function;
 
 @Component
 public class JwtService {
-    //todo перенести в конфиг
-    private static final String SECRET = "5367566859703373367639792F423F452848284D6251655468576D5A71347437";
+//    //todo перенести в конфиг
+    @Value("${jwt.secret}")
+    private String secret;
+    @Value("${jwt.access-token-expiration-ms}")
+    private long accessTokenMs;
 
-    public String generateToken(String email ) {
+    public String generateAccessToken(String email) {
+        return generateToken(email, new Date(System.currentTimeMillis() + accessTokenMs));
+    }
+
+    public String generateRefreshToken(String email, Date expiresAt) {
+        return generateToken(email, expiresAt);
+    }
+
+    private String generateToken(String email, Date expiresAt) {
         Map<String, Object> claims = new HashMap<>();
         var jwt = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(email) //Username is email
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10h
+                .setExpiration(expiresAt)
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -33,7 +45,7 @@ public class JwtService {
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
