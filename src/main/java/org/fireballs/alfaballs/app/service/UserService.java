@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fireballs.alfaballs.app.exception.NotFoundException;
 import org.fireballs.alfaballs.app.repository.UserRepository;
 import org.fireballs.alfaballs.domain.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,7 +47,7 @@ public class UserService {
 
     public User updateUser(long existingUserId, User newUser) {
         if (newUser == null) {
-            throw new IllegalArgumentException("New user is null");
+            throw new NotFoundException("New user is null");
         }
 
         User existingUser = getUserById(existingUserId);
@@ -60,14 +61,14 @@ public class UserService {
 
     public User getUserById(long userId) {
         var searchedGame = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new NotFoundException("User with id " + userId + " not found"));
         log.info("User {} was found by id", userId);
         return searchedGame;
     }
 
     public User getUserByEmail(String email) {
         var searchedGame = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User with email " + email + " not found"));
+                .orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
         log.info("User {} was found by email", email);
         return searchedGame;
     }

@@ -3,6 +3,7 @@ package org.fireballs.alfaballs.app.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fireballs.alfaballs.app.exception.NotFoundException;
 import org.fireballs.alfaballs.app.repository.ProjectRepository;
 import org.fireballs.alfaballs.app.repository.TypeRepository;
 import org.fireballs.alfaballs.domain.Project;
@@ -47,7 +48,7 @@ public class ProjectService {
 
     public Project updateProject(long existingProjectId, Project newProject) {
         if (newProject == null) {
-            throw new IllegalArgumentException("New project is null");
+            throw new NotFoundException("New project is null");
         }
 
         Project existingProject = getProjectById(existingProjectId);
@@ -61,13 +62,21 @@ public class ProjectService {
 
     public Project getProjectById(long projectId) {
         var searchedGame = projectRepository.findById(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("Project with id " + projectId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Project with id " + projectId + " not found"));
         log.info("Project {} was found", projectId);
         return searchedGame;
     }
 
     public void deleteProject(long projectId) {
-        projectRepository.deleteById(projectId);
+        Project project = getProjectById(projectId);
+
+        // Удаляем проект из всех пользователей
+        for (User user : project.getUsers()) {
+            user.getProjects().remove(project);
+        }
+        project.getUsers().clear(); // тоже обнуляем с его стороны
+
+        projectRepository.delete(project);
         log.info("Project {} was deleted", projectId);
     }
 
@@ -84,6 +93,7 @@ public class ProjectService {
         user.getProjects().add(project);
 
         saveProject(project);
+        log.info("User {} added to project {}", userId, project.getId());
     }
 
     public void removeUserFromProject(Long projectId, Long userId) {
@@ -94,5 +104,6 @@ public class ProjectService {
         user.getProjects().remove(project);
 
         saveProject(project);
+        log.info("User {} removed from project {}", userId, project.getId());
     }
 }

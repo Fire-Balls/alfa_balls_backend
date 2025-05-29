@@ -3,6 +3,7 @@ package org.fireballs.alfaballs.app.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fireballs.alfaballs.app.exception.NotFoundException;
 import org.fireballs.alfaballs.app.repository.IssueRepository;
 import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.domain.Issue;
@@ -51,7 +52,7 @@ public class IssueService {
 
     public Issue updateIssue(long existingIssueId, Issue issue) {
         if (issue == null || issue.getBoard() == null) {
-            throw new IllegalArgumentException("Issue or board is null");
+            throw new NotFoundException("Issue or board is null");
         }
 
         if (issue.getDeadline() == null || issue.getDeadline().isBefore(LocalDateTime.now())) {
@@ -74,7 +75,7 @@ public class IssueService {
 
     public Issue getIssueById(long issueId) {
         var searchedGame = issueRepository.findById(issueId)
-                .orElseThrow(() -> new IllegalArgumentException("Issue with id " + issueId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Issue with id " + issueId + " not found"));
         log.info("Issue {} was found", issueId);
         return searchedGame;
     }

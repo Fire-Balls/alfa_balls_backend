@@ -3,6 +3,7 @@ package org.fireballs.alfaballs.app.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fireballs.alfaballs.app.exception.NotFoundException;
 import org.fireballs.alfaballs.app.repository.TypeRepository;
 import org.fireballs.alfaballs.domain.Project;
 import org.fireballs.alfaballs.domain.Type;
@@ -29,7 +30,7 @@ public class TypeService {
 
     public Type updateType(long existingTypeId, Type newType) {
         if (newType == null || newType.getProject() == null) {
-            throw new IllegalArgumentException("Type or Project is null");
+            throw new NotFoundException("Type or Project is null");
         }
 
         Type existingType = getTypeById(existingTypeId);
@@ -41,7 +42,7 @@ public class TypeService {
 
     public Type getTypeById(long typeId) {
         var searchedGame = typeRepository.findById(typeId)
-                .orElseThrow(() -> new IllegalArgumentException("Type with id " + typeId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Type with id " + typeId + " not found"));
         log.info("Type {} was found", typeId);
         return searchedGame;
     }

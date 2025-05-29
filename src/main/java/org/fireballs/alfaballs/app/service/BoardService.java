@@ -3,6 +3,7 @@ package org.fireballs.alfaballs.app.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fireballs.alfaballs.app.exception.NotFoundException;
 import org.fireballs.alfaballs.app.repository.BoardRepository;
 import org.fireballs.alfaballs.app.repository.StatusRepository;
 import org.fireballs.alfaballs.domain.Board;
@@ -11,6 +12,7 @@ import org.fireballs.alfaballs.domain.Status;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Service
@@ -31,7 +33,7 @@ public class BoardService {
         log.info("New board {} was created in project {}", savedBoard.getId(), project.getId());
 
         if (board.getStatuses().isEmpty()) {
-            Set<Status> defaultStatuses = new HashSet<>() {{
+            Set<Status> defaultStatuses = new LinkedHashSet<>() {{
                 add(new Status(null, "TODO", savedBoard, true));
                 add(new Status(null, "DOING", savedBoard, true));
                 add(new Status(null, "DONE", savedBoard, true));
@@ -46,7 +48,7 @@ public class BoardService {
 
     public Board updateBoard(long existingBoardId, Board board) {
         if (board == null || board.getProject() == null) {
-            throw new IllegalArgumentException("Board or Project is null");
+            throw new NotFoundException("Board or Project is null");
         }
 
         Board existingBoard = getBoardById(existingBoardId);
@@ -58,7 +60,7 @@ public class BoardService {
 
     public Board getBoardById(long boardId) {
         var searchedGame = boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("Board with id " + boardId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Board with id " + boardId + " not found"));
         log.info("Board {} was found", boardId);
         return searchedGame;
     }
