@@ -8,8 +8,8 @@ spring:
 ---
 jwt:
   secret: "5367566859703373367639792F423F452848284D6251655468576D5A71347437"
-  access-token-expiration-ms: 36000000   # 20 сек
-  refresh-token-expiration-ms: 604800000  # 40 сек
+  access-token-expiration-ms: 36000000   # 1 день
+  refresh-token-expiration-ms: 604800000  # 7 дней
 
 
 ---

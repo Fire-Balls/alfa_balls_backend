@@ -1,7 +1,9 @@
 package org.fireballs.alfaballs.app.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fireballs.alfaballs.app.exception.NotFoundException;
 import org.fireballs.alfaballs.app.repository.StatusRepository;
 import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.domain.Status;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class StatusService {
     private final StatusRepository statusRepository;
     private final BoardService boardService;
@@ -28,7 +31,7 @@ public class StatusService {
 
     public Status updateStatus(long existingStatusId, Status newStatus) {
         if (newStatus == null || newStatus.getBoard() == null) {
-            throw new IllegalArgumentException("Status or Board is null");
+            throw new NotFoundException("Status or Board is null");
         }
 
         Status existingStatus = getStatusById(existingStatusId);
@@ -40,7 +43,7 @@ public class StatusService {
 
     public Status getStatusById(long statusId) {
         var searchedGame = statusRepository.findById(statusId)
-                .orElseThrow(() -> new IllegalArgumentException("Status with id " + statusId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Status with id " + statusId + " not found"));
         log.info("Status {} was found", statusId);
         return searchedGame;
     }

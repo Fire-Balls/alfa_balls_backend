@@ -1,6 +1,5 @@
 package org.fireballs.alfaballs.app.security;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.service.UserService;
 import org.fireballs.alfaballs.domain.User;

@@ -38,7 +38,7 @@ public class StatusController {
     }
 
     @PutMapping("/{statusId}")
-    public ResponseEntity<StatusDto> updateType(@PathVariable("projectId") Long projectId,
+    public ResponseEntity<StatusDto> updateStatus(@PathVariable("projectId") Long projectId,
                                                 @PathVariable("boardId") Long boardId,
                                                 @PathVariable("statusId") Long statusId,
                                                 @Validated(PostPutGroup.class) @RequestBody StatusDto statusDto) {
@@ -47,7 +47,7 @@ public class StatusController {
     }
 
     @DeleteMapping("/{statusId}")
-    public ResponseEntity<MessageDto> deleteType(@PathVariable("projectId") Long projectId,
+    public ResponseEntity<MessageDto> deleteStatus(@PathVariable("projectId") Long projectId,
                                                  @PathVariable("boardId") Long boardId,
                                                  @PathVariable("statusId") Long statusId) {
         statusService.deleteStatus(statusId);

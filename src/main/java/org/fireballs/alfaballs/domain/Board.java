@@ -3,10 +3,7 @@ package org.fireballs.alfaballs.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Builder
@@ -36,5 +33,5 @@ public class Board {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Status> statuses = new HashSet<>();
+    private Set<Status> statuses = new LinkedHashSet<>();
 }
