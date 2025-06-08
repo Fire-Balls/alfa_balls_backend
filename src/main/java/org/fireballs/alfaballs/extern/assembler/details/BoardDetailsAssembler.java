@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
 @Component
@@ -52,9 +53,9 @@ public class BoardDetailsAssembler extends RepresentationModelAssemblerSupport<B
                 .issues(boardDto.getIssues() == null ? new ArrayList<>() : boardDto.getIssues().stream()
                         .map(issueShortcutAssembler::toEntity)
                         .toList())
-                .statuses(boardDto.getStatuses() == null ? new HashSet<>() : boardDto.getStatuses().stream()
+                .statuses(boardDto.getStatuses() == null ? new ArrayList<>() : boardDto.getStatuses().stream()
                         .map(statusAssembler::toEntity)
-                        .collect(Collectors.toSet()))
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

@@ -70,7 +70,7 @@ public class AuthController {
 
             refreshTokenRepository.save(refreshToken);
 
-            return ResponseEntity.ok(new TokenResponseDto(token, refreshToken.getRefreshToken()));
+            return ResponseEntity.ok(new TokenResponseDto(token, refreshToken.getRefreshToken(), user.getId()));
         } else {
             throw new UsernameNotFoundException("Invalid user request!");
         }
@@ -83,7 +83,7 @@ public class AuthController {
                 .orElseThrow(ValidationException::new);
 
         var newAccessToken = jwtService.generateAccessToken(refreshTokenEntity.getUser().getEmail());
-        return ResponseEntity.ok(new TokenResponseDto(newAccessToken, refreshTokenEntity.getRefreshToken()));
+        return ResponseEntity.ok(new TokenResponseDto(newAccessToken, refreshTokenEntity.getRefreshToken(), refreshTokenEntity.getUser().getId()));
     }
 
     @PostMapping("/logout")

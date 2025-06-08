@@ -27,7 +27,7 @@ public class UserDetailsAssembler extends RepresentationModelAssemblerSupport<Us
         userDto.setId(entity.getId());
         userDto.setFullName(entity.getName());
         userDto.setEmail(entity.getEmail());
-        //userDto.setRoles(entity.getRole());
+        userDto.setRole(entity.getGlobalRole().toString());
         userDto.setAvatar(entity.getAvatar() == null ? null : Base64.getEncoder().encodeToString(entity.getAvatar()));
 
         userDto.setProjects(entity.getProjects().stream()

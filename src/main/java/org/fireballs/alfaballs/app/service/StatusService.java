@@ -7,7 +7,6 @@ import org.fireballs.alfaballs.app.exception.NotFoundException;
 import org.fireballs.alfaballs.app.repository.StatusRepository;
 import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.domain.Status;
-import org.fireballs.alfaballs.domain.Type;
 import org.springframework.stereotype.Service;
 
 @Service

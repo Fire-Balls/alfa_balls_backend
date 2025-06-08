@@ -1,6 +1,7 @@
 package org.fireballs.alfaballs.extern.dto.newdtos.security;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,5 +16,8 @@ public class TokenResponseDto extends RepresentationModel<TokenResponseDto> {
 
         @NotBlank
         private String refreshToken;
+
+        @NotNull
+        private long userId;
 }
 

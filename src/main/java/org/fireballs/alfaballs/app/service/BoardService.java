@@ -32,15 +32,10 @@ public class BoardService {
         Board savedBoard = boardRepository.save(board);
         log.info("New board {} was created in project {}", savedBoard.getId(), project.getId());
 
-        if (board.getStatuses().isEmpty()) {
-            Set<Status> defaultStatuses = new LinkedHashSet<>() {{
-                add(new Status(null, "TODO", savedBoard, true));
-                add(new Status(null, "DOING", savedBoard, true));
-                add(new Status(null, "DONE", savedBoard, true));
-            }};
-
-            statusRepository.saveAll(defaultStatuses);
-            board.setStatuses(defaultStatuses);
+        if (savedBoard.getStatuses().isEmpty()) {
+            savedBoard.getStatuses().add(new Status(null, "TODO", savedBoard, true));
+            savedBoard.getStatuses().add(new Status(null, "DOING", savedBoard, true));
+            savedBoard.getStatuses().add(new Status(null, "DONE", savedBoard, true));
         }
 
         return savedBoard;

@@ -22,7 +22,7 @@ public class UserShortcutAssembler extends RepresentationModelAssemblerSupport<U
         userDto.setId(entity.getId());
         userDto.setFullName(entity.getName());
         userDto.setEmail(entity.getEmail());
-        //userDto.setRoles(entity.getRole());
+        userDto.setRole(entity.getGlobalRole().toString());
         userDto.setAvatar(entity.getAvatar() == null ? null : Base64.getEncoder().encodeToString(entity.getAvatar()));
 
         return userDto;
