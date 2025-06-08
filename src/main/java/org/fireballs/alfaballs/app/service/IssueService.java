@@ -51,11 +51,11 @@ public class IssueService {
     }
 
     public Issue updateIssue(long existingIssueId, Issue issue) {
-        if (issue == null || issue.getBoard() == null) {
+        if (issue == null) {
             throw new NotFoundException("Issue or board is null");
         }
 
-        if (issue.getDeadline() == null || issue.getDeadline().isBefore(LocalDateTime.now())) {
+        if (issue.getDeadline() == null) {
             throw new IllegalArgumentException("Illegal new deadline");
         }
 
@@ -69,7 +69,7 @@ public class IssueService {
         existingIssue.setTags(issue.getTags());
         existingIssue.setDeadline(issue.getDeadline());
 
-        return saveIssue(issue.getBoard().getId(), existingIssue);
+        return saveIssue(existingIssue.getBoard().getId(), existingIssue);
     }
 
 

@@ -1,10 +1,7 @@
 package org.fireballs.alfaballs.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,6 +16,8 @@ import java.util.Set;
 @Entity
 @Table(name = "issues")
 @Inheritance(strategy = InheritanceType.JOINED)
+@ToString(exclude = {"status", "board", "author", "assignee", "dependencies", "observers"})
+@EqualsAndHashCode(exclude = {"status", "board", "author", "assignee", "dependencies", "observers"})
 public class Issue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,7 +70,7 @@ public class Issue {
     @Column
     private LocalDateTime deadline;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String code;
 
     @Builder.Default

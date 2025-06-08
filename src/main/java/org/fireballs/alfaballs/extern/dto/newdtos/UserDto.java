@@ -2,6 +2,7 @@ package org.fireballs.alfaballs.extern.dto.newdtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.groups.Default;
@@ -28,6 +29,9 @@ public interface UserDto {
         @Email
         private String email;
 
+        @NotBlank
+        private String role;
+
         private String avatar;
     }
 
@@ -47,6 +51,9 @@ public interface UserDto {
         private String email;
 
         private String avatar;
+
+        @NotBlank
+        private String role;
 
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @NotNull

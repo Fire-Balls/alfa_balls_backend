@@ -25,6 +25,8 @@ public class Board {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @Builder.Default
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Issue> issues = new ArrayList<>();
@@ -33,5 +35,6 @@ public class Board {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Status> statuses = new LinkedHashSet<>();
+    @OrderBy("id")
+    private List<Status> statuses = new ArrayList<>();
 }
