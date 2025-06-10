@@ -38,7 +38,8 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto.Details> updateUser(@PathVariable Long userId,
                                               @Validated(PostPutGroup.class) @RequestBody UserDto.Shortcut userDto) {
-        User updatedUser = userService.updateUser(userId, userShortcutAssembler.toEntity(userDto));
+        User entity = userShortcutAssembler.toEntity(userDto);
+        User updatedUser = userService.updateUser(userId, entity);
         return ResponseEntity.ok(userDetailsAssembler.toModel(updatedUser));
     }
 

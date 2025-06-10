@@ -22,6 +22,7 @@ public class UserService {
     @PostConstruct
     private void createFirstSuperUser() {
         User superUser = User.builder()
+                .name("Super User")
                 .email("super123@urfu.ru")
                 .password("super")
                 .globalRole(User.Role.ADMIN)
@@ -56,7 +57,7 @@ public class UserService {
         existingUser.setEmail(newUser.getEmail());
         existingUser.setAvatar(newUser.getAvatar());
 
-        return saveUser(existingUser);
+        return userRepository.save(existingUser);
     }
 
     public User getUserById(long userId) {
