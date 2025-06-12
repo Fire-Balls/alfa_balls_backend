@@ -65,8 +65,8 @@ public class ProjectController {
     }
 
         @PatchMapping("/{projectId}/users/{userId}")
-        public ResponseEntity<Void> addUserToProject(@PathVariable Long projectId, @PathVariable Long userId) {
-            projectService.addUserToProject(projectId, userId);
+        public ResponseEntity<Void> addUserToProject(@PathVariable Long projectId, @PathVariable Long userId, @RequestParam String role) {
+            projectService.addUserToProject(projectId, userId, role);
             return ResponseEntity.ok().build();
         }
 

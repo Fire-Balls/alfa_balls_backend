@@ -89,20 +89,17 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public void addUserToProject(Long projectId, Long userId) {
-        Project project = getProjectById(projectId);
-        User user = userService.getUserById(userId);
-
-        boolean alreadyExists = membershipRepository.existsByUserAndProject(user, project);
+    public void addUserToProject(Long projectId, Long userId, String role) {
+        boolean alreadyExists = membershipRepository.existsByUserIdAndProjectId(userId, projectId);
         if (alreadyExists) {
             log.warn("User {} is already in project {}", userId, projectId);
             return;
         }
 
         Membership membership = Membership.builder()
-                .user(user)
-                .project(project)
-                .role(Membership.ProjectRole.PARTICIPANT) // default role
+                .user(userService.getUserById(userId))
+                .project(getProjectById(projectId))
+                .role(Membership.ProjectRole.valueOf(role))
                 .build();
 
         membershipRepository.save(membership);
@@ -110,10 +107,7 @@ public class ProjectService {
     }
 
     public void removeUserFromProject(Long projectId, Long userId) {
-        Project project = getProjectById(projectId);
-        User user = userService.getUserById(userId);
-
-        Membership membership = membershipRepository.findByUserAndProject(user, project)
+        Membership membership = membershipRepository.findByUserIdAndProjectId(userId, projectId)
                 .orElseThrow(() -> new RuntimeException("User is not in project"));
 
         membershipRepository.delete(membership);
