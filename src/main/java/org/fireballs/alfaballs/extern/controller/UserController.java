@@ -6,9 +6,8 @@ import org.fireballs.alfaballs.domain.User;
 import org.fireballs.alfaballs.extern.assembler.details.UserDetailsAssembler;
 import org.fireballs.alfaballs.extern.assembler.shortcut.UserShortcutAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
-import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
-import org.fireballs.alfaballs.extern.dto.newdtos.UserDto;
-import org.springframework.http.HttpStatus;
+import org.fireballs.alfaballs.extern.dto.MessageDto;
+import org.fireballs.alfaballs.extern.dto.UserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -38,7 +37,8 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto.Details> updateUser(@PathVariable Long userId,
                                               @Validated(PostPutGroup.class) @RequestBody UserDto.Shortcut userDto) {
-        User updatedUser = userService.updateUser(userId, userShortcutAssembler.toEntity(userDto));
+        User entity = userShortcutAssembler.toEntity(userDto);
+        User updatedUser = userService.updateUser(userId, entity);
         return ResponseEntity.ok(userDetailsAssembler.toModel(updatedUser));
     }
 

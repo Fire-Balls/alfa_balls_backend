@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.dto.newdtos.validation;
+package org.fireballs.alfaballs.extern.dto.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.dto.newdtos.security;
+package org.fireballs.alfaballs.extern.dto.security;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

@@ -6,10 +6,11 @@ import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.extern.assembler.details.BoardDetailsAssembler;
 import org.fireballs.alfaballs.extern.assembler.shortcut.BoardShortcutAssembler;
 import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
-import org.fireballs.alfaballs.extern.dto.newdtos.BoardDto;
-import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
+import org.fireballs.alfaballs.extern.dto.BoardDto;
+import org.fireballs.alfaballs.extern.dto.MessageDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class BoardController {
     private final BoardDetailsAssembler boardDetailsAssembler;
     private final BoardShortcutAssembler boardShortcutAssembler;
 
+    @PreAuthorize("@projectPermissionService.isOwner(#projectId, authentication.name)")
     @PostMapping
     public ResponseEntity<BoardDto.Details> createBoard(@PathVariable("projectId") Long projectId,
                                                         @Validated(PostPutGroup.class) @RequestBody BoardDto.Shortcut boardDto) {
@@ -38,6 +40,7 @@ public class BoardController {
         return ResponseEntity.ok(boardDetailsAssembler.toModel(retrievedBoard));
     }
 
+    @PreAuthorize("@projectPermissionService.isOwner(#projectId, authentication.name)")
     @PutMapping("/{boardId}")
     public ResponseEntity<BoardDto.Details> updateBoard(@PathVariable("projectId") Long projectId,
                                                         @PathVariable("boardId") Long boardId,
@@ -46,6 +49,7 @@ public class BoardController {
         return ResponseEntity.ok(boardDetailsAssembler.toModel(updatedBoard));
     }
 
+    @PreAuthorize("@projectPermissionService.isOwner(#projectId, authentication.name)")
     @DeleteMapping("/{boardId}")
     public ResponseEntity<MessageDto> deleteBoard(@PathVariable("projectId") Long projectId,
                                                   @PathVariable("boardId") Long boardId) {

@@ -1,11 +1,9 @@
-package org.fireballs.alfaballs.extern.dto.newdtos.validation;
+package org.fireballs.alfaballs.extern.dto.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
 @Constraint(validatedBy = IsAfterValidator.class)

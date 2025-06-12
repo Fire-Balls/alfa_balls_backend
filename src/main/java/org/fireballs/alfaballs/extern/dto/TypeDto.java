@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.dto.newdtos;
+package org.fireballs.alfaballs.extern.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

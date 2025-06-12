@@ -2,7 +2,7 @@ package org.fireballs.alfaballs.extern.assembler.shortcut;
 
 import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.extern.controller.ProjectController;
-import org.fireballs.alfaballs.extern.dto.newdtos.BoardDto;
+import org.fireballs.alfaballs.extern.dto.BoardDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.dto.newdtos;
+package org.fireballs.alfaballs.extern.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
@@ -32,6 +32,7 @@ public interface UserDto {
         @NotBlank
         private String role;
 
+        @NotNull(groups = {PostPutGroup.class, Default.class})
         private String avatar;
     }
 

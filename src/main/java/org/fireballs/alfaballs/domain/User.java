@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -36,15 +37,10 @@ public class User {
     private Role globalRole;
 
     @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany
-    @JoinTable(
-            name = "user_project",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "project_id")
-    )
-    private Set<Project> projects = new HashSet<>();
+    private Set<Membership> memberships = new HashSet<>();
 
     @Builder.Default
     @EqualsAndHashCode.Exclude
@@ -67,4 +63,11 @@ public class User {
         USER,
         ADMIN
     }
+
+    public Set<Project> getProjects() {
+        return memberships.stream()
+                .map(Membership::getProject)
+                .collect(Collectors.toSet());
+    }
+
 }

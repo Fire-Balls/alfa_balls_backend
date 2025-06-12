@@ -7,14 +7,11 @@ import org.fireballs.alfaballs.app.service.TypeService;
 import org.fireballs.alfaballs.app.service.UserService;
 import org.fireballs.alfaballs.domain.Issue;
 import org.fireballs.alfaballs.extern.assembler.details.IssueDetailsAssembler;
-import org.fireballs.alfaballs.extern.assembler.shortcut.IssueShortcutAssembler;
-import org.fireballs.alfaballs.extern.dto.group.PostPutGroup;
-import org.fireballs.alfaballs.extern.dto.newdtos.IssueDto;
-import org.fireballs.alfaballs.extern.dto.newdtos.MessageDto;
+import org.fireballs.alfaballs.extern.dto.IssueDto;
+import org.fireballs.alfaballs.extern.dto.MessageDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller

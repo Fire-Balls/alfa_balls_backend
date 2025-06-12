@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.dto.newdtos;
+package org.fireballs.alfaballs.extern.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
