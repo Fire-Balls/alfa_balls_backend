@@ -4,13 +4,11 @@ import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.extern.assembler.shortcut.IssueShortcutAssembler;
 import org.fireballs.alfaballs.extern.assembler.shortcut.ProjectShortcutAssembler;
 import org.fireballs.alfaballs.extern.controller.ProjectController;
-import org.fireballs.alfaballs.extern.dto.newdtos.BoardDto;
+import org.fireballs.alfaballs.extern.dto.BoardDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
 @Component

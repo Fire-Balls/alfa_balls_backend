@@ -28,7 +28,10 @@ public class IssueService {
         int issueCount = board.getProject().incrementAndGetLastIssueNumber();
 
         issue.setBoard(board);
-        issue.setCode(code + "-" + issueCount);
+
+        if (issue.getCode() == null || issue.getCode().isBlank()) {
+            issue.setCode(code + "-" + issueCount);
+        }
 
         if (issue.getType() == null || !board.getProject().getTypes().contains(issue.getType())) {
             issue.setType(board.getProject().getTypes().stream()

@@ -1,4 +1,4 @@
-package org.fireballs.alfaballs.extern.dto.newdtos;
+package org.fireballs.alfaballs.extern.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
@@ -58,7 +58,7 @@ public interface ProjectDto {
 
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @NotNull
-        private Set<UserDto.Shortcut> participants;
+        private Set<MembershipDto> participants;
 
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @NotNull

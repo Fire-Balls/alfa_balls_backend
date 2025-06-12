@@ -4,9 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.exception.NotFoundException;
+import org.fireballs.alfaballs.app.repository.MembershipRepository;
 import org.fireballs.alfaballs.app.repository.ProjectRepository;
 import org.fireballs.alfaballs.app.repository.TypeRepository;
 import org.fireballs.alfaballs.domain.Project;
+import org.fireballs.alfaballs.domain.Membership;
 import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.domain.User;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final TypeRepository typeRepository;
     private final UserService userService;
+    private final MembershipRepository membershipRepository;
+
 
     public Project saveProject(Project project) {
         if (project == null) {
@@ -89,21 +93,30 @@ public class ProjectService {
         Project project = getProjectById(projectId);
         User user = userService.getUserById(userId);
 
-        project.getUsers().add(user);
-        user.getProjects().add(project);
+        boolean alreadyExists = membershipRepository.existsByUserAndProject(user, project);
+        if (alreadyExists) {
+            log.warn("User {} is already in project {}", userId, projectId);
+            return;
+        }
 
-        saveProject(project);
-        log.info("User {} added to project {}", userId, project.getId());
+        Membership membership = Membership.builder()
+                .user(user)
+                .project(project)
+                .role(Membership.ProjectRole.PARTICIPANT) // default role
+                .build();
+
+        membershipRepository.save(membership);
+        log.info("User {} added to project {} with role PARTICIPANT", userId, projectId);
     }
 
     public void removeUserFromProject(Long projectId, Long userId) {
         Project project = getProjectById(projectId);
         User user = userService.getUserById(userId);
 
-        project.getUsers().remove(user);
-        user.getProjects().remove(project);
+        Membership membership = membershipRepository.findByUserAndProject(user, project)
+                .orElseThrow(() -> new RuntimeException("User is not in project"));
 
-        saveProject(project);
-        log.info("User {} removed from project {}", userId, project.getId());
+        membershipRepository.delete(membership);
+        log.info("User {} removed from project {}", userId, projectId);
     }
 }

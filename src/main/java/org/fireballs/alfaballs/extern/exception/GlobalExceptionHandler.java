@@ -3,7 +3,7 @@ package org.fireballs.alfaballs.extern.exception;
 import org.fireballs.alfaballs.app.exception.ForbiddenException;
 import org.fireballs.alfaballs.app.exception.NotFoundException;
 import org.fireballs.alfaballs.app.exception.UnauthorizedException;
-import org.fireballs.alfaballs.extern.dto.newdtos.ErrorDto;
+import org.fireballs.alfaballs.extern.dto.ErrorDto;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

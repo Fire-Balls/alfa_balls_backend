@@ -1,10 +1,10 @@
-package org.fireballs.alfaballs.extern.dto.newdtos;
+package org.fireballs.alfaballs.extern.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.fireballs.alfaballs.extern.dto.newdtos.validation.IsAfter;
+import org.fireballs.alfaballs.extern.dto.validation.IsAfter;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;

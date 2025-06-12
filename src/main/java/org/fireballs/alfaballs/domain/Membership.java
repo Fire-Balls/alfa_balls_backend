@@ -2,21 +2,39 @@ package org.fireballs.alfaballs.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//todo Переработать систему ролей на проекте
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "roles", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "project_memberships", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "project_id"})
+})
 public class Membership {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(length = 50, nullable = false)
-    private String name;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProjectRole role;
+
+    public enum ProjectRole {
+        OWNER,
+        PARTICIPANT
+    }
 }
 

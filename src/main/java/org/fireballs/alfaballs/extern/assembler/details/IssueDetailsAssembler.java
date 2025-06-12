@@ -4,7 +4,7 @@ import org.fireballs.alfaballs.domain.Issue;
 import org.fireballs.alfaballs.extern.assembler.shortcut.IssueShortcutAssembler;
 import org.fireballs.alfaballs.extern.assembler.shortcut.UserShortcutAssembler;
 import org.fireballs.alfaballs.extern.controller.IssueController;
-import org.fireballs.alfaballs.extern.dto.newdtos.IssueDto;
+import org.fireballs.alfaballs.extern.dto.IssueDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 

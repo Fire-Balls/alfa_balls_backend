@@ -1,14 +1,14 @@
 package org.fireballs.alfaballs.extern.assembler.details;
 
 import org.fireballs.alfaballs.domain.User;
+import org.fireballs.alfaballs.domain.Membership;
 import org.fireballs.alfaballs.extern.assembler.shortcut.ProjectShortcutAssembler;
 import org.fireballs.alfaballs.extern.controller.UserController;
-import org.fireballs.alfaballs.extern.dto.newdtos.UserDto;
+import org.fireballs.alfaballs.extern.dto.UserDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
-import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,7 +30,8 @@ public class UserDetailsAssembler extends RepresentationModelAssemblerSupport<Us
         userDto.setRole(entity.getGlobalRole().toString());
         userDto.setAvatar(entity.getAvatar() == null ? null : Base64.getEncoder().encodeToString(entity.getAvatar()));
 
-        userDto.setProjects(entity.getProjects().stream()
+        userDto.setProjects(entity.getMemberships().stream()
+                .map(Membership::getProject)
                 .map(projectShortcutAssembler::toModel)
                 .collect(Collectors.toSet()));
 
@@ -43,8 +44,6 @@ public class UserDetailsAssembler extends RepresentationModelAssemblerSupport<Us
                 .name(userDto.getFullName())
                 .email(userDto.getEmail())
                 .avatar(userDto.getAvatar() == null ? null : Base64.getDecoder().decode(userDto.getAvatar()))
-                .projects(userDto.getProjects() == null ? new HashSet<>() :
-                        userDto.getProjects().stream().map(projectShortcutAssembler::toEntity).collect(Collectors.toSet()))
                 .build();
     }
 }

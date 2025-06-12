@@ -2,12 +2,11 @@ package org.fireballs.alfaballs.extern.assembler.shortcut;
 
 import org.fireballs.alfaballs.domain.User;
 import org.fireballs.alfaballs.extern.controller.UserController;
-import org.fireballs.alfaballs.extern.dto.newdtos.UserDto;
+import org.fireballs.alfaballs.extern.dto.UserDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
-import java.util.HashSet;
 
 @Component
 public class UserShortcutAssembler extends RepresentationModelAssemblerSupport<User, UserDto.Shortcut> {

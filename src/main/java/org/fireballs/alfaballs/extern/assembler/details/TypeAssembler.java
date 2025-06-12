@@ -2,7 +2,7 @@ package org.fireballs.alfaballs.extern.assembler.details;
 
 import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.extern.controller.TypeController;
-import org.fireballs.alfaballs.extern.dto.newdtos.TypeDto;
+import org.fireballs.alfaballs.extern.dto.TypeDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 

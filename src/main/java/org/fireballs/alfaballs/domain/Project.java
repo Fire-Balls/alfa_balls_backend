@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -32,10 +33,10 @@ public class Project {
     private List<Board> boards = new ArrayList<>();
 
     @Builder.Default
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "projects")
-    private Set<User> users = new HashSet<>();
+    private Set<Membership> memberships = new HashSet<>();
 
     @Builder.Default
     @EqualsAndHashCode.Exclude
@@ -50,4 +51,11 @@ public class Project {
     public int incrementAndGetLastIssueNumber() {
         return ++lastIssueNumber;
     }
+
+    public Set<User> getUsers() {
+        return memberships.stream()
+                .map(Membership::getUser)
+                .collect(Collectors.toSet());
+    }
+
 }

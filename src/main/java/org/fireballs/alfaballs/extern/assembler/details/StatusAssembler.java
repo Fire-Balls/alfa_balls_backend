@@ -2,7 +2,7 @@ package org.fireballs.alfaballs.extern.assembler.details;
 
 import org.fireballs.alfaballs.domain.Status;
 import org.fireballs.alfaballs.extern.controller.StatusController;
-import org.fireballs.alfaballs.extern.dto.newdtos.StatusDto;
+import org.fireballs.alfaballs.extern.dto.StatusDto;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
