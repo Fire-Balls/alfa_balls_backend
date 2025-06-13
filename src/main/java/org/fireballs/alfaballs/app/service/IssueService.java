@@ -10,7 +10,6 @@ import org.fireballs.alfaballs.domain.Issue;
 import org.fireballs.alfaballs.domain.User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,12 +23,11 @@ public class IssueService {
 
     public Issue saveIssue(long boardId, Issue issue) {
         Board board = boardService.getBoardById(boardId);
-        String code = board.getProject().getCode();
-        int issueCount = board.getProject().incrementAndGetLastIssueNumber();
-
         issue.setBoard(board);
 
         if (issue.getCode() == null || issue.getCode().isBlank()) {
+            String code = board.getProject().getCode();
+            int issueCount = board.getProject().incrementAndGetLastIssueNumber();
             issue.setCode(code + "-" + issueCount);
         }
 
