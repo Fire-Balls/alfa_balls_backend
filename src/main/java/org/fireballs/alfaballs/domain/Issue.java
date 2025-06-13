@@ -78,24 +78,4 @@ public class Issue {
     @CollectionTable(name = "issue_tags", joinColumns = @JoinColumn(name = "issue_id"))
     @Column(name = "tag")
     private List<String> tags = new ArrayList<>();
-
-//    @ManyToOne(optional = false)
-//    @JoinColumn(name = "epic_id", nullable = false)
-//    private Epic epic;
-//
-//    @Builder.Default
-//    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<IssueFieldValue> fieldValues = new HashSet<>();
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private Priority priority;
-
-//    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<File> files = new ArrayList<>();
-
-//    public enum Priority {
-//        HIGH,
-//        LOW
-//    }
 }
