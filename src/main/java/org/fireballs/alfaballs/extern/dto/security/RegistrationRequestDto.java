@@ -12,6 +12,9 @@ import org.springframework.hateoas.RepresentationModel;
 @Data
 public class RegistrationRequestDto extends RepresentationModel<StatusDto> {
     @NotBlank
+    private String fullName;
+
+    @NotBlank
     @Email
     private String email;
 

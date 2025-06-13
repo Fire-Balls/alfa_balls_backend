@@ -34,6 +34,12 @@ public class UserController {
         return ResponseEntity.ok(userDetailsAssembler.toModel(retrievedUser));
     }
 
+    @GetMapping("/by-email")
+    public ResponseEntity<UserDto.Details> getUserByEmail(@RequestParam String email) {
+        User retrievedUser = userService.getUserByEmail(email);
+        return ResponseEntity.ok(userDetailsAssembler.toModel(retrievedUser));
+    }
+
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto.Details> updateUser(@PathVariable Long userId,
                                               @Validated(PostPutGroup.class) @RequestBody UserDto.Shortcut userDto) {

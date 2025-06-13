@@ -42,6 +42,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<UserDto.Details> register(@Valid @RequestBody RegistrationRequestDto registrationRequestDto) {
         User newUser = User.builder()
+                .name(registrationRequestDto.getFullName())
                 .email(registrationRequestDto.getEmail())
                 .password(registrationRequestDto.getPassword())
                 .globalRole(User.Role.valueOf(registrationRequestDto.getGlobalRole()))
