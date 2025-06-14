@@ -52,6 +52,8 @@ public class IssueDetailsAssembler extends RepresentationModelAssemblerSupport<I
                 .map(issueShortcutAssembler::toModel)
                 .collect(Collectors.toSet()));
 
+        details.setFileUrls(entity.getFileUrls());
+
         return details;
     }
 

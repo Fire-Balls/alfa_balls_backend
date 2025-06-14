@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.fireballs.alfaballs.extern.dto.validation.IsAfter;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +37,8 @@ public interface IssueDto {
 
         @NotNull
         private List<String> tags;
+
+        private List<MultipartFile> files;
     }
 
 
@@ -117,5 +120,8 @@ public interface IssueDto {
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @NotNull
         private Set<IssueDto.Shortcut> depends;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        private List<String> fileUrls;
     }
 }

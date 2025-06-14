@@ -1,6 +1,8 @@
 package org.fireballs.alfaballs.extern.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.fireballs.alfaballs.app.s3.FilesService;
+import org.fireballs.alfaballs.app.s3.YandexS3Client;
 import org.fireballs.alfaballs.app.service.IssueService;
 import org.fireballs.alfaballs.app.service.StatusService;
 import org.fireballs.alfaballs.app.service.TypeService;
@@ -13,6 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/projects/{projectId}/boards/{boardId}/issues")
@@ -23,13 +31,20 @@ public class IssueController {
     private final UserService userService;
     private final TypeService typeService;
     private final StatusService statusService;
+    private final FilesService filesService;
 
     @PostMapping
     public ResponseEntity<IssueDto.Details> createIssue(@PathVariable long projectId,
                                                         @PathVariable long boardId,
-                                                        @RequestBody IssueDto.CreateUpdate issueDto) {
+                                                        @RequestPart("issue") IssueDto.CreateUpdate issueDto,
+                                                        @RequestPart(name = "files", required = false) List<MultipartFile> files) {
 
-        Issue savedIssue = issueService.saveIssue(boardId, postPutRequestToEntity(issueDto));
+        Issue issue = postPutRequestToEntity(issueDto);
+
+        List<String> fileUrls = filesService.uploadFilesToYandex(files);
+        issue.setFileUrls(fileUrls);
+
+        Issue savedIssue = issueService.saveIssue(boardId, issue);
         return new ResponseEntity<>(issueDetailsAssembler.toModel(savedIssue), HttpStatus.CREATED);
     }
 

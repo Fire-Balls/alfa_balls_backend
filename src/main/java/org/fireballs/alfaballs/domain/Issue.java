@@ -78,4 +78,10 @@ public class Issue {
     @CollectionTable(name = "issue_tags", joinColumns = @JoinColumn(name = "issue_id"))
     @Column(name = "tag")
     private List<String> tags = new ArrayList<>();
+
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "issue_files", joinColumns = @JoinColumn(name = "issue_id"))
+    @Column(name = "file_url")
+    private List<String> fileUrls = new ArrayList<>();
 }
