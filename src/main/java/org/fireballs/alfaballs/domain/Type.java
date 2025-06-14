@@ -1,31 +1,30 @@
 package org.fireballs.alfaballs.domain;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "issue_types", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"project_id", "name"})
-})
-public class Type {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Getter
+public enum Type {
+    BUG("Bug"),
+    STORY("Story"),
+    TASK("Task");
 
-    @Column(length = 50, nullable = false)
-    private String name;
+    private final String displayName;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    Type(String displayName) {
+        this.displayName = displayName;
+    }
 
-    @Column(nullable = false)
-    private boolean isDefault;
+    @Override
+    public String toString() {
+        return displayName;
+    }
+
+    public static Type fromString(String value) {
+        for (Type type : Type.values()) {
+            if (type.displayName.equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unknown type: " + value);
+    }
 }

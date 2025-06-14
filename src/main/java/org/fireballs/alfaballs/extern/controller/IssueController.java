@@ -2,12 +2,11 @@ package org.fireballs.alfaballs.extern.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.fireballs.alfaballs.app.s3.FilesService;
-import org.fireballs.alfaballs.app.s3.YandexS3Client;
 import org.fireballs.alfaballs.app.service.IssueService;
 import org.fireballs.alfaballs.app.service.StatusService;
-import org.fireballs.alfaballs.app.service.TypeService;
 import org.fireballs.alfaballs.app.service.UserService;
 import org.fireballs.alfaballs.domain.Issue;
+import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.extern.assembler.details.IssueDetailsAssembler;
 import org.fireballs.alfaballs.extern.dto.IssueDto;
 import org.fireballs.alfaballs.extern.dto.MessageDto;
@@ -17,9 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -29,7 +25,6 @@ public class IssueController {
     private final IssueService issueService;
     private final IssueDetailsAssembler issueDetailsAssembler;
     private final UserService userService;
-    private final TypeService typeService;
     private final StatusService statusService;
     private final FilesService filesService;
 
@@ -121,7 +116,7 @@ public class IssueController {
                 .description(dto.getDescription())
                 .author(dto.getAuthorId() == null ? null : userService.getUserById(dto.getAuthorId()))
                 .assignee(dto.getAssigneeId() == null ? null : userService.getUserById(dto.getAssigneeId()))
-                .type(dto.getTypeId() == null ? null : typeService.getTypeById(dto.getTypeId()))
+                .type(Type.fromString(dto.getType()))
                 .status(dto.getStatusId() == null ? null : statusService.getStatusById(dto.getStatusId()))
                 .deadline(dto.getDeadline())
                 .tags(dto.getTags())

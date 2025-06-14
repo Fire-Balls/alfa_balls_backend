@@ -6,16 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.exception.NotFoundException;
 import org.fireballs.alfaballs.app.repository.MembershipRepository;
 import org.fireballs.alfaballs.app.repository.ProjectRepository;
-import org.fireballs.alfaballs.app.repository.TypeRepository;
 import org.fireballs.alfaballs.domain.Project;
 import org.fireballs.alfaballs.domain.Membership;
-import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.domain.User;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -23,7 +19,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final TypeRepository typeRepository;
     private final UserService userService;
     private final MembershipRepository membershipRepository;
 
@@ -35,17 +30,6 @@ public class ProjectService {
 
         Project savedProject = projectRepository.save(project);
         log.info("Project {} was saved", project.getId());
-
-        if (project.getTypes().isEmpty()) {
-            Set<Type> defaultTypes = new HashSet<>() {{
-                add(new Type(null, "Bug", savedProject, true));
-                add(new Type(null, "Story", savedProject, true));
-                add(new Type(null, "Task", savedProject, true));
-            }};
-
-            typeRepository.saveAll(defaultTypes);
-            savedProject.setTypes(defaultTypes);
-        }
 
         return savedProject;
     }

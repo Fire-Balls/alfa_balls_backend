@@ -39,12 +39,6 @@ public class Project {
     private Set<Membership> memberships = new HashSet<>();
 
     @Builder.Default
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Type> types = new HashSet<>();
-
-    @Builder.Default
     @Column(nullable = false)
     private Integer lastIssueNumber = 0;
 

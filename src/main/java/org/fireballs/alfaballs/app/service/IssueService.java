@@ -31,13 +31,6 @@ public class IssueService {
             issue.setCode(code + "-" + issueCount);
         }
 
-        if (issue.getType() == null || !board.getProject().getTypes().contains(issue.getType())) {
-            issue.setType(board.getProject().getTypes().stream()
-                    .filter(type -> type.isDefault() && type.getName().equals("Task"))
-                    .findFirst()
-                    .orElseThrow(IllegalArgumentException::new));
-        }
-
         if (issue.getStatus() == null || !board.getStatuses().contains(issue.getStatus())) {
             issue.setStatus(board.getStatuses().stream()
                     .filter(status -> status.isDefault() && status.getName().equals("TODO"))

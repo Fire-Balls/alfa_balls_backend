@@ -28,7 +28,7 @@ public interface IssueDto {
         private Long assigneeId;
 
         @NotNull
-        private Long typeId;
+        private String type;
 
         @NotNull
         private Long statusId;
@@ -55,7 +55,7 @@ public interface IssueDto {
         private String title;
 
         @NotNull
-        private TypeDto type;
+        private String type;
 
         @NotNull
         private StatusDto status;
@@ -88,7 +88,7 @@ public interface IssueDto {
         private String description;
 
         @NotNull
-        private TypeDto type;
+        private String type;
 
         @NotNull
         private StatusDto status;

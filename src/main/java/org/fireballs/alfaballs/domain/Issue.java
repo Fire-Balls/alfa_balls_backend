@@ -33,8 +33,8 @@ public class Issue {
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
 
-    @ManyToOne
-    @JoinColumn(name = "type_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Type type;
 
     @ManyToOne

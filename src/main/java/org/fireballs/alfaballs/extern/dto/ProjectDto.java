@@ -59,9 +59,5 @@ public interface ProjectDto {
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @NotNull
         private Set<MembershipDto> participants;
-
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        @NotNull
-        private Set<TypeDto> types;
     }
 }

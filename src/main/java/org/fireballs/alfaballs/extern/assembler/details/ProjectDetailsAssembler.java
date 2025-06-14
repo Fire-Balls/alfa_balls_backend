@@ -18,19 +18,16 @@ public class ProjectDetailsAssembler extends RepresentationModelAssemblerSupport
     private final IssueShortcutAssembler issueShortcutAssembler;
     private final BoardShortcutAssembler boardShortcutAssembler;
     private final IssueService issueService;
-    private final TypeAssembler typeAssembler;
     private final MembershipAssembler membershipAssembler;
 
     public ProjectDetailsAssembler(IssueShortcutAssembler issueShortcutAssembler,
                                    BoardShortcutAssembler boardAssembler,
                                    IssueService issueService,
-                                   TypeAssembler typeAssembler,
                                    MembershipAssembler membershipAssembler) {
         super(ProjectController.class, ProjectDto.Details.class);
         this.issueShortcutAssembler = issueShortcutAssembler;
         this.boardShortcutAssembler = boardAssembler;
         this.issueService = issueService;
-        this.typeAssembler = typeAssembler;
         this.membershipAssembler = membershipAssembler;
     }
 
@@ -54,11 +51,6 @@ public class ProjectDetailsAssembler extends RepresentationModelAssemblerSupport
                 .map(membershipAssembler::toModel)
                 .collect(Collectors.toSet()));
 
-
-        dto.setTypes(entity.getTypes().stream()
-                .map(typeAssembler::toModel)
-                .collect(Collectors.toSet()));
-
         return dto;
     }
 
@@ -69,8 +61,6 @@ public class ProjectDetailsAssembler extends RepresentationModelAssemblerSupport
                 .code(projectDto.getProjectCode())
                 .boards(projectDto.getKanbanBoards() == null ? new ArrayList<>() :
                         projectDto.getKanbanBoards().stream().map(boardShortcutAssembler::toEntity).toList())
-                .types(projectDto.getTypes() == null ? new HashSet<>() :
-                        projectDto.getTypes().stream().map(typeAssembler::toEntity).collect(Collectors.toSet()))
                 .build();
     }
 }

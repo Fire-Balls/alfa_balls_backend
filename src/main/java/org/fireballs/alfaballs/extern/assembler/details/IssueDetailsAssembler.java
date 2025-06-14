@@ -1,6 +1,7 @@
 package org.fireballs.alfaballs.extern.assembler.details;
 
 import org.fireballs.alfaballs.domain.Issue;
+import org.fireballs.alfaballs.domain.Type;
 import org.fireballs.alfaballs.extern.assembler.shortcut.IssueShortcutAssembler;
 import org.fireballs.alfaballs.extern.assembler.shortcut.UserShortcutAssembler;
 import org.fireballs.alfaballs.extern.controller.IssueController;
@@ -13,14 +14,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class IssueDetailsAssembler extends RepresentationModelAssemblerSupport<Issue, IssueDto.Details> {
-    private final TypeAssembler typeAssembler;
     private final StatusAssembler statusAssembler;
     private final UserShortcutAssembler userShortcutAssembler;
     private final IssueShortcutAssembler issueShortcutAssembler;
 
-    public IssueDetailsAssembler(TypeAssembler typeAssembler, StatusAssembler statusAssembler, UserShortcutAssembler userShortcutAssembler, IssueShortcutAssembler issueShortcutAssembler) {
+    public IssueDetailsAssembler(StatusAssembler statusAssembler, UserShortcutAssembler userShortcutAssembler, IssueShortcutAssembler issueShortcutAssembler) {
         super(IssueController.class, IssueDto.Details.class);
-        this.typeAssembler = typeAssembler;
         this.statusAssembler = statusAssembler;
         this.userShortcutAssembler = userShortcutAssembler;
         this.issueShortcutAssembler = issueShortcutAssembler;
@@ -39,7 +38,7 @@ public class IssueDetailsAssembler extends RepresentationModelAssemblerSupport<I
         details.setCreatedAt(entity.getCreatedAt());
         details.setDeadline(entity.getDeadline());
 
-        details.setType(typeAssembler.toModel(entity.getType()));
+        details.setType(entity.getType().toString());
         details.setStatus(statusAssembler.toModel(entity.getStatus()));
         details.setAssignee(entity.getAssignee() == null ? null : userShortcutAssembler.toModel(entity.getAssignee()));
         details.setAuthor(userShortcutAssembler.toModel(entity.getAuthor()));
@@ -68,7 +67,7 @@ public class IssueDetailsAssembler extends RepresentationModelAssemblerSupport<I
                 .description(dto.getDescription())
                 .assignee(dto.getAssignee() == null ? null : userShortcutAssembler.toEntity(dto.getAssignee()))
                 .status(dto.getStatus() == null ? null : statusAssembler.toEntity(dto.getStatus()))
-                .type(dto.getType() == null ? null : typeAssembler.toEntity(dto.getType()))
+                .type(Type.fromString(dto.getType()))
                 .observers(dto.getObservers() == null ? new HashSet<>() :
                         dto.getObservers().stream().map(userShortcutAssembler::toEntity).collect(Collectors.toSet()))
                 .dependencies(dto.getDepends() == null ? new HashSet<>() :
