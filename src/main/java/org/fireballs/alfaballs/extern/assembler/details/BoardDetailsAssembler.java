@@ -38,7 +38,7 @@ public class BoardDetailsAssembler extends RepresentationModelAssemblerSupport<B
                 .toList());
         dto.setStatuses(entity.getStatuses().stream()
                 .map(statusAssembler::toModel)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toList()));
 
         return dto;
     }

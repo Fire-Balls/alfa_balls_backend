@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.fireballs.alfaballs.extern.dto.validation.IsAfter;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,8 +36,6 @@ public interface IssueDto {
 
         @NotNull
         private List<String> tags;
-
-        private List<MultipartFile> files;
     }
 
 

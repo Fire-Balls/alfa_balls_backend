@@ -22,11 +22,9 @@ import java.util.Set;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final ProjectService projectService;
-    private final StatusRepository statusRepository;
 
     public Board saveBoard(long projectId, Board board) {
         Project project = projectService.getProjectById(projectId);
-        // проще брать project из борда?
         board.setProject(project);
 
         Board savedBoard = boardRepository.save(board);

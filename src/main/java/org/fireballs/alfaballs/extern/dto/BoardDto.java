@@ -57,6 +57,6 @@ public interface BoardDto {
 
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @NotNull
-        private Set<StatusDto> statuses;
+        private List<StatusDto> statuses;
     }
 }
