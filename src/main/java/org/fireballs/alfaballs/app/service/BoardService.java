@@ -31,9 +31,9 @@ public class BoardService {
         log.info("New board {} was created in project {}", savedBoard.getId(), project.getId());
 
         if (savedBoard.getStatuses().isEmpty()) {
-            savedBoard.getStatuses().add(new Status(null, "TODO", savedBoard, true));
-            savedBoard.getStatuses().add(new Status(null, "DOING", savedBoard, true));
-            savedBoard.getStatuses().add(new Status(null, "DONE", savedBoard, true));
+            savedBoard.getStatuses().add(new Status(null, "TODO", savedBoard, 0, true));
+            savedBoard.getStatuses().add(new Status(null, "DOING", savedBoard, 1, true));
+            savedBoard.getStatuses().add(new Status(null, "DONE", savedBoard, 2, true));
         }
 
         return savedBoard;

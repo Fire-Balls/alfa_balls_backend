@@ -35,6 +35,6 @@ public class Board {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("id")
+    @OrderBy("orderPosition ASC")
     private List<Status> statuses = new ArrayList<>();
 }

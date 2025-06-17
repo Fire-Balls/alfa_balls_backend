@@ -26,5 +26,8 @@ public class Status {
     private Board board;
 
     @Column(nullable = false)
+    private Integer orderPosition;
+
+    @Column(nullable = false)
     private boolean isDefault;
 }

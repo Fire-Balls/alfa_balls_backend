@@ -19,6 +19,7 @@ public class StatusAssembler extends RepresentationModelAssemblerSupport<Status,
         statusDto.setId(entity.getId());
         statusDto.setName(entity.getName());
         statusDto.setCommon(entity.isDefault());
+        statusDto.setOrderPosition(entity.getOrderPosition());
 
         return statusDto;
     }
@@ -28,6 +29,7 @@ public class StatusAssembler extends RepresentationModelAssemblerSupport<Status,
                 .id(dto.getId())
                 .name(dto.getName())
                 .isDefault(dto.isCommon())
+                .orderPosition(dto.getOrderPosition())
                 .build();
     }
 }

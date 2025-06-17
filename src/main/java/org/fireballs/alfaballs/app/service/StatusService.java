@@ -9,6 +9,8 @@ import org.fireballs.alfaballs.domain.Board;
 import org.fireballs.alfaballs.domain.Status;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -19,8 +21,11 @@ public class StatusService {
 
     public Status saveNewStatus(long boardId, Status status) {
         Board board = boardService.getBoardById(boardId);
-
         status.setBoard(board);
+
+        if (status.getOrderPosition() == null) {
+            status.setOrderPosition(status.getBoard().getStatuses().size());
+        }
 
         Status savedStatus = statusRepository.save(status);
         log.info("New status {} was created in board {}", savedStatus.getId(), board.getId());
@@ -29,13 +34,25 @@ public class StatusService {
     }
 
     public Status updateStatus(long existingStatusId, Status newStatus) {
-        if (newStatus == null || newStatus.getBoard() == null) {
-            throw new NotFoundException("Status or Board is null");
+        if (newStatus == null) {
+            throw new NotFoundException("Status is null");
         }
 
         Status existingStatus = getStatusById(existingStatusId);
 
         existingStatus.setName(newStatus.getName());
+
+        if (newStatus.getOrderPosition() < existingStatus.getBoard().getStatuses().size()) {
+            Status statusToSwap = existingStatus.getBoard().getStatuses().stream()
+                    .filter(s -> Objects.equals(s.getOrderPosition(), newStatus.getOrderPosition()))
+                    .findFirst()
+                    .orElseThrow();
+
+            statusToSwap.setOrderPosition(existingStatus.getOrderPosition());
+            existingStatus.setOrderPosition(newStatus.getOrderPosition());
+
+            statusRepository.save(statusToSwap);
+        }
 
         return saveNewStatus(existingStatus.getBoard().getId(), existingStatus);
     }

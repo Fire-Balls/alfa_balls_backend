@@ -44,7 +44,6 @@ public interface ProjectDto {
         String projectName;
 
         @NotBlank(groups = {PostPutGroup.class, Default.class})
-        @Size(min = 3, max = 10)
         @Pattern(regexp = "^[A-Z0-9_]{3}$")
         String projectCode;
 
