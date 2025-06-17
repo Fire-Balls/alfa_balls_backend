@@ -27,6 +27,8 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/register").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/users/{userId}").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.PATCH, "/projects/{projectId}/users/{userId}").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/projects/invite/accept").permitAll()
                                 .anyRequest().authenticated()
                         )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

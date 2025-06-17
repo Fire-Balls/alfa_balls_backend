@@ -64,15 +64,27 @@ public class ProjectController {
         return ResponseEntity.ok(projectDetailsAssembler.toModel(retrievedProject));
     }
 
-        @PatchMapping("/{projectId}/users/{userId}")
-        public ResponseEntity<Void> addUserToProject(@PathVariable Long projectId, @PathVariable Long userId, @RequestParam String role) {
-            projectService.addUserToProject(projectId, userId, role);
-            return ResponseEntity.ok().build();
-        }
+    @PatchMapping("/{projectId}/users/{userId}")
+    public ResponseEntity<Void> addUserToProject(@PathVariable Long projectId, @PathVariable Long userId, @RequestParam String role) {
+        projectService.addUserToProject(projectId, userId, role);
+        return ResponseEntity.ok().build();
+    }
 
-        @DeleteMapping("/{projectId}/users/{userId}")
-        public ResponseEntity<Void> removeUserFromProject(@PathVariable Long projectId, @PathVariable Long userId) {
-            projectService.removeUserFromProject(projectId, userId);
-            return ResponseEntity.ok().build();
-        }
+    @DeleteMapping("/{projectId}/users/{userId}")
+    public ResponseEntity<Void> removeUserFromProject(@PathVariable Long projectId, @PathVariable Long userId) {
+        projectService.removeUserFromProject(projectId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{projectId}/users/{userId}/invite/send")
+    public ResponseEntity<Void> sendInvite(@PathVariable Long projectId, @PathVariable Long userId, @RequestParam String role) {
+        projectService.sendInvite(projectId, userId, role);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("invite/accept")
+    public ResponseEntity<Void> acceptInvite(@RequestParam String token) {
+        projectService.acceptInvite(token);
+        return ResponseEntity.ok().build();
+    }
 }

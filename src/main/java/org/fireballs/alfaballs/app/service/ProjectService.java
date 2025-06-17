@@ -4,23 +4,33 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fireballs.alfaballs.app.exception.NotFoundException;
+import org.fireballs.alfaballs.app.repository.InviteRepository;
 import org.fireballs.alfaballs.app.repository.MembershipRepository;
 import org.fireballs.alfaballs.app.repository.ProjectRepository;
 import org.fireballs.alfaballs.domain.Project;
 import org.fireballs.alfaballs.domain.Membership;
+import org.fireballs.alfaballs.domain.ProjectInvite;
 import org.fireballs.alfaballs.domain.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class ProjectService {
+    @Value("${url}")
+    private String url;
+
     private final ProjectRepository projectRepository;
     private final UserService userService;
     private final MembershipRepository membershipRepository;
+    private final EmailService emailService;
+    private final InviteRepository inviteRepository;
 
 
     public Project saveProject(Project project) {
@@ -87,7 +97,7 @@ public class ProjectService {
                 .build();
 
         membershipRepository.save(membership);
-        log.info("User {} added to project {} with role PARTICIPANT", userId, projectId);
+        log.info("User {} added to project {} with role {}", userId, projectId, role);
     }
 
     public void removeUserFromProject(Long projectId, Long userId) {
@@ -96,5 +106,40 @@ public class ProjectService {
 
         membershipRepository.delete(membership);
         log.info("User {} removed from project {}", userId, projectId);
+    }
+
+    public void sendInvite(Long projectId, Long userId, String role) {
+        Project project = projectRepository.findById(projectId).orElseThrow();
+        User user = userService.getUserById(userId);
+
+        String token = UUID.randomUUID().toString();
+
+        ProjectInvite invite = ProjectInvite.builder()
+                .user(user)
+                .token(token)
+                .accepted(false)
+                .project(project)
+                .role(Membership.ProjectRole.valueOf(role))
+                .expiresAt(LocalDateTime.now().plusDays(3))
+                .build();
+
+        inviteRepository.save(invite);
+
+        String link = url + "projects/invite/accept?token=" +  token;
+        emailService.sendInviteEmail(user.getEmail(), link);
+    }
+
+    public void acceptInvite(String token) {
+        ProjectInvite invite = inviteRepository.findByToken(token)
+                .orElseThrow(() -> new NotFoundException("Token not found"));
+
+        if (invite.isAccepted() || invite.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new NotFoundException("Invite is already accepted");
+        }
+
+        Project project = getProjectById(invite.getProject().getId());
+        User user = userService.getUserById(invite.getUser().getId());
+
+        addUserToProject(project.getId(), user.getId(), invite.getRole().toString());
     }
 }
